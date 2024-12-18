@@ -7,8 +7,6 @@ export default async function Page() {
   const token = cookie.get("sb:token")?.value ?? "";
   const sb = await createClient();
   const user = await sb.auth.getUser(token);
-  console.log(user);
-
   const authUser = await sb
     .from("users")
     .select("*")
