@@ -9,6 +9,122 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      categories: {
+        Row: {
+          id: number
+          name: string
+        }
+        Insert: {
+          id?: number
+          name: string
+        }
+        Update: {
+          id?: number
+          name?: string
+        }
+        Relationships: []
+      }
+      product_category: {
+        Row: {
+          category_id: number
+          product_id: string
+        }
+        Insert: {
+          category_id: number
+          product_id?: string
+        }
+        Update: {
+          category_id?: number
+          product_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_category_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_category_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_photo: {
+        Row: {
+          id: number
+          product_id: string
+          url: string
+        }
+        Insert: {
+          id?: number
+          product_id?: string
+          url: string
+        }
+        Update: {
+          id?: number
+          product_id?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_photo_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          price: number
+          stok: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at: string
+          description?: string | null
+          id?: string
+          name: string
+          price: number
+          stok?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          price?: number
+          stok?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      role: {
+        Row: {
+          id: number
+          title: string
+        }
+        Insert: {
+          id?: number
+          title: string
+        }
+        Update: {
+          id?: number
+          title?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           avatar: string | null
@@ -16,6 +132,7 @@ export type Database = {
           email: string
           id: string
           name: string
+          phone_number: number | null
           terms: boolean
           updated_at: string
         }
@@ -25,6 +142,7 @@ export type Database = {
           email: string
           id?: string
           name: string
+          phone_number?: number | null
           terms: boolean
           updated_at?: string
         }
@@ -34,6 +152,7 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+          phone_number?: number | null
           terms?: boolean
           updated_at?: string
         }
