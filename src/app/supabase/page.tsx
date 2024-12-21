@@ -1,3 +1,4 @@
+import DeletePhotoFromStorage from "./DeletePhotoFromStorage";
 import FormCategory from "./FormCategories";
 import FormPhotos from "./FormPhotos";
 
@@ -9,6 +10,7 @@ export default function Page() {
       </div>
       <FormCategory />
       <FormPhotos />
+      <DeletePhotoFromStorage />
     </main>
   );
 }

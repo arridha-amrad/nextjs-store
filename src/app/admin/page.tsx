@@ -1,8 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import MyAvatar from "@/components/MyAvatar";
+import { cookies } from "next/headers";
 
 export default async function Page() {
-  const sb = await createClient();
+  const cookie = await cookies();
+  const sb = createClient(cookie);
   const user = await sb.auth.getUser();
   const authUser = await sb
     .from("users")
