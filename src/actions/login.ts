@@ -3,9 +3,12 @@
 import { setCookieToken } from "@/lib/cookie";
 import { LoginFormSchema } from "@/lib/definition";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
 
 export async function login(_: any, formData: FormData) {
+  const cookie = await cookies();
+
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -20,7 +23,7 @@ export async function login(_: any, formData: FormData) {
     };
   }
 
-  const supabase = await createClient();
+  const supabase = createClient(cookie);
 
   const { error, data } = await supabase.auth.signInWithPassword({
     email,
