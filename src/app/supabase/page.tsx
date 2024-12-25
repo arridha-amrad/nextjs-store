@@ -1,5 +1,6 @@
 import DeletePhotoFromStorage from "./DeletePhotoFromStorage";
 import FormCategory from "./FormCategories";
+import FormCategoriesWithCreatableSelect from "./FormCategoriesWithCreatableSelect";
 import FormPhotos from "./FormPhotos";
 
 export default function Page() {
@@ -11,6 +12,7 @@ export default function Page() {
       <FormCategory />
       <FormPhotos />
       <DeletePhotoFromStorage />
+      <FormCategoriesWithCreatableSelect />
     </main>
   );
 }

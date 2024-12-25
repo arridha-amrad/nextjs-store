@@ -1,17 +1,17 @@
 "use client";
 
+import MyTooltip from "@/components/MyTooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { DollarSignIcon, Loader2, PlusIcon, Trash } from "lucide-react";
-import { useActionState, useRef, useState } from "react";
-import { TEditProduct } from "./definition";
-import { editProductAction } from "./action";
+import { DollarSignIcon, Loader2, PlusIcon } from "lucide-react";
 import Image from "next/image";
-import MyTooltip from "@/components/MyTooltip";
+import { useActionState, useRef, useState } from "react";
+import { editProductAction } from "./action";
 import AlertDialogDeletePhoto from "./AlertDialogDeletePhoto";
+import { TEditProduct } from "./definition";
 
 type Props = {
   props: TEditProduct;
@@ -24,8 +24,10 @@ export default function FormEditProduct({ props }: Props) {
   const [error, setError] = useState("");
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
-  const aa = editProductAction.bind(null, id);
-  const [state, action, isPending] = useActionState(aa, undefined);
+  const [state, action, isPending] = useActionState(
+    editProductAction,
+    undefined
+  );
 
   const IMAGE_BASE_URL =
     "https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products";
@@ -33,6 +35,7 @@ export default function FormEditProduct({ props }: Props) {
   return (
     <fieldset disabled={isPending}>
       <form action={action} className="grid grid-cols-2 gap-y-5 gap-x-10">
+        <input type="text" hidden name="userId" defaultValue={id} />
         <div className="space-y-3 col-span-2">
           <Label htmlFor="productName">Product's Name</Label>
           <Input id="productName" type="text" name="name" defaultValue={name} />
@@ -114,13 +117,13 @@ export default function FormEditProduct({ props }: Props) {
           {photos.map((v, i) => (
             <div
               key={i}
-              className="rounded-lg group relative cursor-pointer flex items-center justify-center aspect-square w-[400px]"
+              className="rounded-lg group relative cursor-pointer flex items-center justify-center aspect-square max-w-[200px]"
             >
               <div className="absolute inset-0  group-hover:bg-black/65 transition-all duration-200 ease-linear" />
               <Image
                 className="w-full h-auto object-fill object-center"
-                width={400}
-                height={400}
+                width={500}
+                height={500}
                 src={`${IMAGE_BASE_URL}/${v}`}
                 alt="product_photo"
               />

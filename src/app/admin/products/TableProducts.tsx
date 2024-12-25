@@ -1,3 +1,4 @@
+import { CACHE_KEY_PRODUCTS } from "@/cacheKey";
 import {
   Table,
   TableBody,
@@ -8,12 +9,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
-import AlertDialogDeleteProduct from "./AlertDialogDeleteProduct";
 import { unstable_cache } from "next/cache";
-import { CACHE_KEY_PRODUCTS } from "@/cacheKey";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
+import Link from "next/link";
+import AlertDialogDeleteProduct from "./AlertDialogDeleteProduct";
 
 const fetchProducts = async (cookie: ReadonlyRequestCookies) => {
   const supabase = createClient(cookie);

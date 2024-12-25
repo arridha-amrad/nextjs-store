@@ -1,12 +1,13 @@
 "use client";
 
+import SelectCategories from "@/components/SelectCategories";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DollarSignIcon, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { createProductSchema, TCreateProduct } from "./definition";
@@ -62,42 +63,18 @@ export default function FormCreateProduct() {
             <p className="text-destructive text-xs">{errors.name.message}</p>
           )}
         </div>
-        <div className="space-y-3 col-span-2">
-          <Label htmlFor="categories">Category</Label>
-          <Input
-            placeholder="motherboard, pc, computer"
-            id="categories"
-            type="text"
-            {...register("categories")}
-          />
-          {errors?.categories ? (
-            <p className="text-destructive text-xs">
-              {errors.categories.message}
-            </p>
-          ) : (
-            <p className="text-muted-foreground text-xs">
-              Please use comma as separator
-            </p>
-          )}
+        <div className="col-span-2">
+          <SelectCategories />
         </div>
 
-        <div className="space-y-3 relative">
+        <div className="space-y-3">
           <Label htmlFor="price">Price</Label>
           <Input
-            className="pl-10"
             id="price"
             type="number"
             step={0.01}
             {...register("price", { valueAsNumber: true })}
           />
-          <Button
-            className="top-6 left-0 absolute"
-            variant="outline"
-            size="icon"
-            disabled
-          >
-            <DollarSignIcon />
-          </Button>
           {errors?.price && (
             <p className="text-destructive text-xs">{errors.price.message}</p>
           )}

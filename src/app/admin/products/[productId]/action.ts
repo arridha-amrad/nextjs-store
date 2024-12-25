@@ -4,11 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { editProductSchema } from "./definition";
 import { cookies } from "next/headers";
 
-export const editProductAction = async (
-  _: any,
-  formdata: FormData,
-  userId: string
-) => {
+export const editProductAction = async (_: any, formdata: FormData) => {
+  const userId = formdata.get("userId") as string;
   const categories = formdata.get("categories") as string;
   const description = formdata.get("description") as string;
   const name = formdata.get("name") as string;
