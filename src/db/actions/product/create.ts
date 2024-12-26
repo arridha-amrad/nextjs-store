@@ -6,7 +6,7 @@ import { Supabase } from "@/lib/supabase/Supabase";
 import { revalidateTag } from "next/cache";
 import { v4 } from "uuid";
 
-export const createProduct = async (_: any, formData: FormData) => {
+export const createProduct = async (_: unknown, formData: FormData) => {
   let categories = formData.getAll("categories") as string[];
   const description = formData.get("description") as string;
   const name = formData.get("name") as string;

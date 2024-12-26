@@ -1,12 +1,11 @@
 "use server";
 
-import { setCookieToken } from "@/lib/cookie";
 import { LoginFormSchema } from "@/lib/definitions/auth";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
 
-export async function login(_: any, formData: FormData) {
+export async function login(_: unknown, formData: FormData) {
   const cookie = await cookies();
 
   const email = formData.get("email") as string;
@@ -25,7 +24,7 @@ export async function login(_: any, formData: FormData) {
 
   const supabase = createClient(cookie);
 
-  const { error, data } = await supabase.auth.signInWithPassword({
+  const { error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -33,16 +32,6 @@ export async function login(_: any, formData: FormData) {
   if (error) {
     return {
       error: error.message,
-    };
-  }
-
-  const { session } = data;
-
-  if (session) {
-    setCookieToken(session.access_token);
-  } else {
-    return {
-      error: "something went wrong",
     };
   }
 

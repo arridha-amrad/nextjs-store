@@ -12,8 +12,11 @@ type Option = {
   value: string;
   label: string;
 };
+type Props = {
+  defaultValue?: Option[];
+};
 
-export default function SelectCategories() {
+export default function SelectCategories({ defaultValue }: Props) {
   const [isFocusCategory, setFocusCategory] = useState(false);
 
   const loadCategories = async (value: string) => {
@@ -29,7 +32,7 @@ export default function SelectCategories() {
     );
   };
 
-  const [value, setValue] = useState<Option[]>([]);
+  const [value, setValue] = useState<Option[]>(defaultValue ?? []);
 
   return (
     <div className="space-y-3 relative">

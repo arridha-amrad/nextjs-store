@@ -1,4 +1,4 @@
-import FormCreateProduct from "@/components/Forms/product/Create";
+import FormCreateProduct from "@/components/forms/product/Create";
 
 export default function Page() {
   return (

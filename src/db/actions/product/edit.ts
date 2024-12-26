@@ -1,19 +1,21 @@
 "use server";
 
-import { editProductSchema } from "@/lib/definitions/product";
-import { createClient } from "@/lib/supabase/server";
+import { CACHE_KEY_PRODUCT, CACHE_KEY_PRODUCTS } from "@/cacheKey";
+import { createProductSchema } from "@/lib/definitions/product";
+import { Supabase } from "@/lib/supabase/Supabase";
+import { revalidateTag } from "next/cache";
+import { v4 } from "uuid";
 
-import { cookies } from "next/headers";
-
-export const editProductAction = async (_: any, formdata: FormData) => {
-  const userId = formdata.get("userId") as string;
-  const categories = formdata.get("categories") as string;
+export const editProductAction = async (_: unknown, formdata: FormData) => {
+  const productId = formdata.get("productId") as string;
+  const categories = formdata.getAll("categories") as string[];
   const description = formdata.get("description") as string;
   const name = formdata.get("name") as string;
   const price = parseFloat(formdata.get("price") as string);
   const stock = parseInt(formdata.get("stock") as string);
+  const photos = formdata.getAll("photos") as File[];
 
-  const validateField = editProductSchema.safeParse({
+  const validateField = createProductSchema.safeParse({
     categories,
     description,
     name,
@@ -27,60 +29,27 @@ export const editProductAction = async (_: any, formdata: FormData) => {
     };
   }
 
-  const cookie = await cookies();
-  const sb = createClient(cookie);
-  const arrCategories = categories.split(", ");
+  const sb = await Supabase.initServerClient();
 
-  // 1. check if categories already registered
-  const { data: d, error: err } = await sb
+  // 1. upsert categories
+  const { data: upsertedCategories, error: errorUpsertedCategories } = await sb
     .from("categories")
-    .select("*")
-    .in("name", arrCategories);
-  if (err || d === null) {
+    .upsert(
+      categories.map((v) => ({
+        name: v,
+      })),
+      { ignoreDuplicates: false, onConflict: "name" }
+    )
+    .select();
+
+  if (errorUpsertedCategories) {
     return {
-      error: "Something went wrong",
+      error: errorUpsertedCategories.message,
     };
   }
 
-  // 2. check what categories attach to this product
-  const { data: d4, error: err4 } = await sb
-    .from("product_category")
-    .select("*")
-    .eq("product_id", userId);
-  if (err4 || d4 === null) {
-    return {
-      error: "Something went wrong",
-    };
-  }
-
-  //   const regCategories = d.map((d) => d.name);
-  //   const revokedCategoriesOfProduct: string[] = [];
-  //   for (const cat of arrCategories) {
-  //     if (!regCategories.includes(cat)) {
-  //       return;
-  //     }
-  //   }
-
-  // 2. since every category is unique. insert same category will throw err
-  const registeredCategories = d.map((v) => v.name);
-  // 2.1. filter the categories we re going to insert against the already registered categories
-  const categoriesToInsert = [];
-  for (const cat of arrCategories) {
-    if (!registeredCategories.includes(cat)) {
-      categoriesToInsert.push(cat);
-    }
-  }
-
-  // 3. insert the categories
-  const { data: d2, error: err2 } = await sb
-    .from("categories")
-    .insert(categoriesToInsert.map((v) => ({ name: v })))
-    .select("id");
-  if (err2) throw err2;
-  if (!d2) return;
-
-  // 4. insert the product
-  const { data: d3, error: err3 } = await sb
+  // 2. update the product
+  const { error: errorUpdate } = await sb
     .from("products")
     .update({
       description,
@@ -88,18 +57,58 @@ export const editProductAction = async (_: any, formdata: FormData) => {
       price,
       stock,
     })
-    .select()
-    .single();
-  if (err3) throw err3;
-  if (d3 === null) return;
+    .eq("id", productId);
 
-  // 5. tie each product with a category
+  if (errorUpdate) {
+    return {
+      error: errorUpdate.message,
+    };
+  }
+
+  // 3. tie each category with its product
   await sb.from("product_category").insert(
-    [...d2, ...d].map((v) => ({
-      product_id: d3.id,
+    (upsertedCategories ?? []).map((v) => ({
+      product_id: productId,
       category_id: v.id,
     }))
   );
 
-  console.log(validateField.data);
+  // 4 insert photos
+  const paths: string[] = [];
+  for (const photo of photos) {
+    const filename = v4();
+    const ext = photo.type.split("/")[1];
+    const { data, error } = await sb.storage
+      .from("products")
+      .upload(`${productId}/${filename}.${ext}`, photo);
+    if (error) {
+      return {
+        error: error.message,
+      };
+    }
+    if (data) {
+      paths.push(data.path);
+    }
+  }
+
+  // 5. tie photos with product
+  const { error } = await sb.from("product_photo").insert(
+    paths.map((v) => ({
+      url: v,
+      product_id: productId,
+    }))
+  );
+
+  if (error) {
+    return {
+      error: error.message,
+    };
+  }
+
+  revalidateTag(CACHE_KEY_PRODUCT);
+  revalidateTag(CACHE_KEY_PRODUCTS);
+
+  return {
+    message: "Product updated successfully",
+  };
 };

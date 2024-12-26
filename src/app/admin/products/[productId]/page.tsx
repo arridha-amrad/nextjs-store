@@ -1,43 +1,13 @@
-import { CACHE_KEY_PRODUCT } from "@/cacheKey";
-import FormEditProduct from "@/components/Forms/product/Edit";
-import { createClient } from "@/lib/supabase/server";
-import { unstable_cache } from "next/cache";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import FormEditProduct from "@/components/forms/product/Edit";
+import { getProductCache } from "@/db/queries/product";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
-const fetchProduct = async (
-  productId: string,
-  cookie: ReadonlyRequestCookies
-) => {
-  const supabase = createClient(cookie);
-  const { data } = await supabase
-    .from("products")
-    .select(
-      `*, 
-    product_photo (
-        url
-    ),
-    product_category (
-        categories (
-            name
-        )
-    )
-    `
-    )
-    .eq("id", productId)
-    .single();
-  return data;
-};
-
-const getProductCache = unstable_cache(fetchProduct, [CACHE_KEY_PRODUCT], {
-  tags: [CACHE_KEY_PRODUCT],
-});
 
 async function Page({ params }: { params: Promise<{ productId: string }> }) {
   const cookie = await cookies();
   const productId = (await params).productId;
   const product = await getProductCache(productId, cookie);
+
   if (product === null) redirect("/products");
   const {
     description,
@@ -48,6 +18,7 @@ async function Page({ params }: { params: Promise<{ productId: string }> }) {
     stock,
     id,
   } = product;
+
   return (
     <main className="py-4 px-16">
       <div className="mb-10">
