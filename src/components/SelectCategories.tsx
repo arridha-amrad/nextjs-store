@@ -8,6 +8,11 @@ const CreatableSelect = dynamic(() => import("react-select/async-creatable"), {
   ssr: false,
 });
 
+type Option = {
+  value: string;
+  label: string;
+};
+
 export default function SelectCategories() {
   const [isFocusCategory, setFocusCategory] = useState(false);
 
@@ -24,6 +29,8 @@ export default function SelectCategories() {
     );
   };
 
+  const [value, setValue] = useState<Option[]>([]);
+
   return (
     <div className="space-y-3 relative">
       {isFocusCategory && (
@@ -35,6 +42,10 @@ export default function SelectCategories() {
       <CreatableSelect
         id="categories"
         name="categories"
+        onChange={(v) => {
+          setValue(v as Option[]);
+        }}
+        value={value}
         unstyled
         onBlur={() => setFocusCategory(false)}
         onFocus={() => setFocusCategory(true)}
@@ -45,9 +56,9 @@ export default function SelectCategories() {
           multiValue: () =>
             "bg-primary rounded-md text-primary-foreground px-2 py-0.5 space-x-2 text-sm",
           menu: () =>
-            "border-2 border-primary rounded-md bg-background overflow-hidden",
+            "border-2 mt-2 border-primary/30 cursor-pointer rounded-md bg-background overflow-hidden",
           menuList: () => "text-primary",
-          placeholder: () => "text-muted-foreground",
+          placeholder: () => "text-muted-foreground pl-1",
           option: () => "bg-background hover:bg-primary/20 px-4 py-2",
           control: (state) =>
             `p-2 ${

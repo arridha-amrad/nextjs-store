@@ -1,18 +1,17 @@
 "use client";
 
+import DeletePhoto from "@/components/alertDialog/DeletePhoto";
 import MyTooltip from "@/components/MyTooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { editProductAction } from "@/db/actions/product/edit";
 import { useToast } from "@/hooks/use-toast";
+import { TEditProduct } from "@/lib/definitions/product";
 import { DollarSignIcon, Loader2, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import { useActionState, useRef, useState } from "react";
-
-import AlertDialogDeletePhoto from "./AlertDialogDeletePhoto";
-import { TEditProduct } from "./definition";
-import { editProductAction } from "./action";
 
 type Props = {
   props: TEditProduct;
@@ -129,7 +128,7 @@ export default function FormEditProduct({ props }: Props) {
                 alt="product_photo"
               />
               <div className="absolute opacity-0 group-hover:opacity-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 duration-100 ease-linear transition-opacity">
-                <AlertDialogDeletePhoto />
+                <DeletePhoto />
               </div>
             </div>
           ))}

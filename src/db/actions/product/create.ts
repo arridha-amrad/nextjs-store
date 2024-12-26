@@ -1,19 +1,20 @@
 "use server";
-import { Supabase } from "@/lib/supabase/Supabase";
-import { createProductSchema } from "./definition";
-import { v4 } from "uuid";
-import { revalidateTag } from "next/cache";
+
 import { CACHE_KEY_PRODUCTS } from "@/cacheKey";
+import { createProductSchema } from "@/lib/definitions/product";
+import { Supabase } from "@/lib/supabase/Supabase";
+import { revalidateTag } from "next/cache";
+import { v4 } from "uuid";
 
 export const createProduct = async (_: any, formData: FormData) => {
-  const categories = formData.getAll("categories") as string[];
+  let categories = formData.getAll("categories") as string[];
   const description = formData.get("description") as string;
   const name = formData.get("name") as string;
   const price = parseFloat(formData.get("price") as string);
   const stock = parseInt(formData.get("stock") as string);
   const photos = formData.getAll("photos") as File[];
 
-  console.log(categories);
+  categories = categories.filter((c) => c !== "");
 
   const validateField = createProductSchema.safeParse({
     name,

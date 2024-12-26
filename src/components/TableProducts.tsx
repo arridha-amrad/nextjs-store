@@ -7,10 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { getCachedProducts } from "@/db/queries/product";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import AlertDialogDeleteProduct from "../delete/AlertDialogDeleteProduct";
-import { getCachedProducts } from "./query";
+import AlertDialogDeleteProduct from "./alertDialog/DeleteProduct";
 
 async function TableProducts() {
   const cookie = await cookies();

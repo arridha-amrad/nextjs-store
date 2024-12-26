@@ -1,6 +1,6 @@
+import TableProducts from "@/components/TableProducts";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { TableProducts } from "@/features";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 

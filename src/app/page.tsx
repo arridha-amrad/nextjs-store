@@ -1,4 +1,4 @@
-import { logout } from "@/db/actions/logout";
+import { logout } from "@/db/actions/auth/logout";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";

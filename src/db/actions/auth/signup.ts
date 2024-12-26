@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { SignupFormSchema } from "@/lib/definition";
+import { SignupFormSchema } from "@/lib/definitions/auth";
 
 export async function signup(_: any, formData: FormData) {
   const email = formData.get("email") as string;

@@ -1,9 +1,9 @@
 "use server";
 
+import { editProductSchema } from "@/lib/definitions/product";
 import { createClient } from "@/lib/supabase/server";
 
 import { cookies } from "next/headers";
-import { editProductSchema } from "./definition";
 
 export const editProductAction = async (_: any, formdata: FormData) => {
   const userId = formdata.get("userId") as string;

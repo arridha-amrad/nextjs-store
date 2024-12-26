@@ -1,9 +1,9 @@
 import { CACHE_KEY_PRODUCT } from "@/cacheKey";
+import FormEditProduct from "@/components/Forms/product/Edit";
 import { createClient } from "@/lib/supabase/server";
 import { unstable_cache } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
-import FormEditProduct from "../../../../features/product/edit/FormEditProduct";
 import { redirect } from "next/navigation";
 
 const fetchProduct = async (
@@ -56,7 +56,7 @@ async function Page({ params }: { params: Promise<{ productId: string }> }) {
       <FormEditProduct
         props={{
           id,
-          categories: product_category.map((v) => v.categories.name).join(", "),
+          categories: product_category.map((v) => v.categories.name),
           description: description,
           name,
           photos: product_photo.map((v) => v.url),

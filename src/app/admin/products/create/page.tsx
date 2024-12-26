@@ -1,4 +1,4 @@
-import { FormCreateProduct } from "@/features";
+import FormCreateProduct from "@/components/Forms/product/Create";
 
 export default function Page() {
   return (

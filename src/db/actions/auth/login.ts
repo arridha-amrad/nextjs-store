@@ -1,7 +1,7 @@
 "use server";
 
 import { setCookieToken } from "@/lib/cookie";
-import { LoginFormSchema } from "@/lib/definition";
+import { LoginFormSchema } from "@/lib/definitions/auth";
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
