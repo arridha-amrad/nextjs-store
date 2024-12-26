@@ -1,13 +1,11 @@
 "use server";
 
 import { CACHE_KEY_PRODUCTS } from "@/cacheKey";
-import { createClient } from "@/lib/supabase/server";
+import { Supabase } from "@/lib/supabase/Supabase";
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
 
 export const removeProduct = async (id: string) => {
-  const cookie = await cookies();
-  const supabase = createClient(cookie);
+  const supabase = await Supabase.initServerClient();
   // performing delete product followed by deleting the photos related to it
   // 1. get the photos url
   const { data: d1 } = await supabase

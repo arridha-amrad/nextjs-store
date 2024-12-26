@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { unstable_cache } from "next/cache";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
-import FormEditProduct from "./FormEditProduct";
+import FormEditProduct from "../../../../features/product/edit/FormEditProduct";
 import { redirect } from "next/navigation";
 
 const fetchProduct = async (

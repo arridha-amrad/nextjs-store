@@ -9,9 +9,10 @@ import { useToast } from "@/hooks/use-toast";
 import { DollarSignIcon, Loader2, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import { useActionState, useRef, useState } from "react";
-import { editProductAction } from "./action";
+
 import AlertDialogDeletePhoto from "./AlertDialogDeletePhoto";
 import { TEditProduct } from "./definition";
+import { editProductAction } from "./action";
 
 type Props = {
   props: TEditProduct;

@@ -1,4 +1,3 @@
-import { CACHE_KEY_PRODUCTS } from "@/cacheKey";
 import {
   Table,
   TableBody,
@@ -8,21 +7,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { createClient } from "@/lib/supabase/server";
-import { unstable_cache } from "next/cache";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import AlertDialogDeleteProduct from "./AlertDialogDeleteProduct";
-
-const fetchProducts = async (cookie: ReadonlyRequestCookies) => {
-  const supabase = createClient(cookie);
-  const { data } = await supabase.from("products").select("*");
-  return data;
-};
-const getCachedProducts = unstable_cache(fetchProducts, [CACHE_KEY_PRODUCTS], {
-  tags: [CACHE_KEY_PRODUCTS],
-});
+import AlertDialogDeleteProduct from "../delete/AlertDialogDeleteProduct";
+import { getCachedProducts } from "./query";
 
 async function TableProducts() {
   const cookie = await cookies();
@@ -43,7 +31,7 @@ async function TableProducts() {
         {products?.map((product, i) => (
           <TableRow key={product.id}>
             <TableCell className="">{i + 1}</TableCell>
-            <TableCell className="">{product.name}</TableCell>
+            <TableCell className="max-w-sm">{product.name}</TableCell>
             <TableCell>{product.stock}</TableCell>
             <TableCell>{product.price}</TableCell>
             <TableCell className="text-right space-x-4">

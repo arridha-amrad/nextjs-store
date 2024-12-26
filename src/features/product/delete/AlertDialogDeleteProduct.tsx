@@ -11,10 +11,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { removeProduct } from "@/features/product/delete/action";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import { useState, useTransition } from "react";
-import { removeProduct } from "./actions";
 
 function ModalDeleteProduct({ id }: { id: string }) {
   const { toast } = useToast();

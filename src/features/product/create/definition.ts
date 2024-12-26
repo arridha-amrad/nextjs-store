@@ -5,7 +5,7 @@ export const createProductSchema = z.object({
   description: z.string().trim().min(1, "Product's description is required"),
   stock: z.number().gt(0),
   price: z.number().gt(0),
-  categories: z.string().trim().min(1, "Product's category is required"),
+  categories: z.string().array().min(1, "Category is required"),
 });
 
 export type TCreateProduct = z.infer<typeof createProductSchema>;
