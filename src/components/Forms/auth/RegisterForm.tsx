@@ -1,33 +1,32 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { signup } from "../actions/signup";
-import { ChangeEventHandler, useActionState, useEffect, useState } from "react";
-import MyAlert from "@/components/MyAlert";
-import { EyeIcon, EyeOff, Loader2 } from "lucide-react";
-import Link from "next/link";
-import MyCheckBox from "./MyCheckbox";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { signup } from '@/db/actions/auth/signup';
+import { cn } from '@/lib/utils';
+import { EyeIcon, EyeOff, Loader2 } from 'lucide-react';
+import Link from 'next/link';
+import { ChangeEventHandler, useActionState, useEffect, useState } from 'react';
+import MyCheckBox from '../../MyCheckbox';
 
 export default function RegisterForm({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: React.ComponentPropsWithoutRef<'div'>) {
   const [state, action, pending] = useActionState(signup, undefined);
 
   const [formState, setFormState] = useState({
-    email: "",
-    name: "",
-    password: "",
+    email: '',
+    name: '',
+    password: '',
   });
 
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -44,15 +43,15 @@ export default function RegisterForm({
     if (state?.message) {
       setFormState({
         ...formState,
-        email: "",
-        name: "",
-        password: "",
+        email: '',
+        name: '',
+        password: '',
       });
     }
   }, [state?.message]);
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
@@ -108,7 +107,7 @@ export default function RegisterForm({
                 <div className="relative">
                   <Input
                     id="password"
-                    type={isShowPassword ? "text" : "password"}
+                    type={isShowPassword ? 'text' : 'password'}
                     name="password"
                     onChange={handleChange}
                     value={formState.password}
@@ -144,7 +143,7 @@ export default function RegisterForm({
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Link href="/login" className="underline pl-1 underline-offset-4">
                 Login
               </Link>
