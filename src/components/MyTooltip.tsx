@@ -3,8 +3,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { ReactNode } from "react";
+} from '@/components/ui/tooltip';
+import { ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;

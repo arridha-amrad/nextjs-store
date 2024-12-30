@@ -1,5 +1,6 @@
 'use client';
 
+import MyCheckBox from '@/components/MyCheckbox';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -15,7 +16,6 @@ import { cn } from '@/lib/utils';
 import { EyeIcon, EyeOff, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { ChangeEventHandler, useActionState, useEffect, useState } from 'react';
-import MyCheckBox from '../../MyCheckbox';
 
 export default function RegisterForm({
   className,
