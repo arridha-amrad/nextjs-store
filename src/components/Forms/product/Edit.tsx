@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import DeletePhoto from "@/components/alertDialog/DeletePhoto";
-import AddStock from "@/components/dialog/AddStock";
-import MyTooltip from "@/components/MyTooltip";
-import SelectCategories from "@/components/SelectCategories";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { editProductAction } from "@/db/actions/product/edit";
-import { useToast } from "@/hooks/use-toast";
-import { TEditProduct } from "@/lib/definitions/product";
-import { DollarSignIcon, Loader, PlusIcon } from "lucide-react";
-import Image from "next/image";
-import { useActionState, useEffect, useRef, useState } from "react";
+import DeletePhoto from '@/components/alertDialog/DeletePhoto';
+import AddStock from '@/components/dialog/AddStock';
+import MyTooltip from '@/components/MyTooltip';
+import SelectCategories from '@/components/SelectCategories';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { editProductAction } from '@/db/actions/product/edit';
+import { useToast } from '@/hooks/use-toast';
+import { TEditProduct } from '@/lib/definitions/product';
+import { DollarSignIcon, Loader, PlusIcon } from 'lucide-react';
+import Image from 'next/image';
+import { useActionState, useEffect, useRef, useState } from 'react';
 
 type Props = {
   props: TEditProduct;
@@ -32,11 +32,11 @@ export default function FormEditProduct({ props }: Props) {
 
   const [state, action, isPending] = useActionState(
     editProductAction,
-    undefined
+    undefined,
   );
 
   const IMAGE_BASE_URL =
-    "https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products";
+    'https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products';
 
   useEffect(() => {
     if (file) {
@@ -63,7 +63,7 @@ export default function FormEditProduct({ props }: Props) {
     if (state?.error) {
       toast({
         description: state.error,
-        variant: "destructive",
+        variant: 'destructive',
       });
     }
     // eslint-disable-next-line
@@ -74,7 +74,7 @@ export default function FormEditProduct({ props }: Props) {
       <form
         action={(data) => {
           for (const file of filesToUpload) {
-            data.append("photos", file);
+            data.append('photos', file);
           }
           action(data);
         }}
