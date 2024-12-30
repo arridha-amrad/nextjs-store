@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   AlertDialog,
@@ -9,12 +9,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { removeProduct } from "@/db/actions/product/delete";
-import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
-import { useState, useTransition } from "react";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { removeProduct } from '@/db/actions/product/delete';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2 } from 'lucide-react';
+import { useState, useTransition } from 'react';
 
 function ModalDeleteProduct({ id }: { id: string }) {
   const { toast } = useToast();
@@ -34,7 +34,7 @@ function ModalDeleteProduct({ id }: { id: string }) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button size={"sm"} className="text-destructive" variant={"link"}>
+        <Button size={'sm'} className="text-destructive" variant={'link'}>
           Delete
         </Button>
       </AlertDialogTrigger>

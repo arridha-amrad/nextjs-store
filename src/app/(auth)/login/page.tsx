@@ -1,9 +1,9 @@
+import LoginForm from '@/components/forms/auth/LoginForm';
 import { Metadata } from 'next';
-import LoginForm from '@/components/Forms/auth/LoginForm';
 
 export const metadata: Metadata = {
-  title: 'Register',
-  description: 'Create an account',
+  title: 'Login',
+  description: 'Start using your account',
 };
 
 export default function Page() {

@@ -1,13 +1,13 @@
-import { AppSidebar } from "@/components/AppSidebar";
-import BreadcrumbAdmin from "@/components/BreadcrumbAdmin";
+import { AppSidebar } from '@/components/AppSidebar';
+import BreadcrumbAdmin from '@/components/BreadcrumbAdmin';
 
-import { Separator } from "@/components/ui/separator";
+import { Separator } from '@/components/ui/separator';
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { ReactNode } from "react";
+} from '@/components/ui/sidebar';
+import { ReactNode } from 'react';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
