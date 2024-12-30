@@ -1,23 +1,23 @@
-"use server";
+'use server';
 
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from '@/lib/supabase/client';
 
 export const actionCategoriesWithCreatableSelect = async (
   _: any,
-  formdata: FormData
+  formdata: FormData,
 ) => {
-  const categories = formdata.getAll("categories") as string[];
+  const categories = formdata.getAll('categories') as string[];
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("categories")
+    .from('categories')
     .upsert(
       categories.map((v) => ({
         name: v.toLowerCase(),
       })),
       {
         ignoreDuplicates: false,
-        onConflict: "name",
-      }
+        onConflict: 'name',
+      },
     )
     .select();
   if (error) {
@@ -25,7 +25,7 @@ export const actionCategoriesWithCreatableSelect = async (
   }
   if (data === null) {
     return {
-      error: "Data is null",
+      error: 'Data is null',
     };
   }
 

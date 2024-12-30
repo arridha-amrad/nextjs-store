@@ -1,7 +1,8 @@
-import DeletePhotoFromStorage from "./DeletePhotoFromStorage";
-import FormCategory from "./FormCategories";
-import FormCategoriesWithCreatableSelect from "./FormCategoriesWithCreatableSelect";
-import FormPhotos from "./FormPhotos";
+import { Button } from '@/components/ui/button';
+import DeletePhotoFromStorage from './DeletePhotoFromStorage';
+import FormCategory from './FormCategories';
+import FormCategoriesWithCreatableSelect from './FormCategoriesWithCreatableSelect';
+import FormPhotos from './FormPhotos';
 
 export default function Page() {
   return (
@@ -13,6 +14,9 @@ export default function Page() {
       <FormPhotos />
       <DeletePhotoFromStorage />
       <FormCategoriesWithCreatableSelect />
+      <div className="py-4">
+        <Button>Login with google</Button>
+      </div>
     </main>
   );
 }

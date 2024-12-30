@@ -15,6 +15,7 @@ import { ChangeEventHandler, useActionState, useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { login } from '@/db/actions/auth/login';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LoginForm({
   className,
@@ -31,6 +32,16 @@ export default function LoginForm({
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const loginWithGoogle = async () => {
+    const sb = createClient();
+    await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://localhost:3000/auth/callback',
+      },
     });
   };
 
@@ -84,7 +95,12 @@ export default function LoginForm({
                 {pending && <Loader2 className="animate-spin" />}
                 Login
               </Button>
-              <Button variant="outline" className="w-full">
+              <Button
+                type="button"
+                onClick={() => loginWithGoogle()}
+                variant="outline"
+                className="w-full"
+              >
                 Continue with Google
               </Button>
             </div>
