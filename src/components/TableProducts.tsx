@@ -6,11 +6,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { getCachedProducts } from "@/db/queries/product";
-import { cookies } from "next/headers";
-import Link from "next/link";
-import AlertDialogDeleteProduct from "./alertDialog/DeleteProduct";
+} from '@/components/ui/table';
+import { getCachedProducts } from '@/db/queries/product';
+import { cookies } from 'next/headers';
+import Link from 'next/link';
+import AlertDialogDeleteProduct from './alertDialog/DeleteProduct';
 
 async function TableProducts() {
   const cookie = await cookies();

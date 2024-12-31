@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          is_select: boolean
           product_id: string
           total: number
           user_id: string
@@ -20,6 +21,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: number
+          is_select?: boolean
           product_id: string
           total: number
           user_id: string
@@ -27,6 +29,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: number
+          is_select?: boolean
           product_id?: string
           total?: number
           user_id?: string
@@ -58,36 +61,67 @@ export type Database = {
       }
       orders: {
         Row: {
+          arrived_at: string | null
           confirmed_at: string | null
           confirmed_by: string | null
           created_at: string
+          id: string
+          shipping_at: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          value: number
+        }
+        Insert: {
+          arrived_at?: string | null
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          id?: string
+          shipping_at?: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          value: number
+        }
+        Update: {
+          arrived_at?: string | null
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          id?: string
+          shipping_at?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          value?: number
+        }
+        Relationships: []
+      }
+      orders_items: {
+        Row: {
           id: number
+          order_id: string
           product_id: string
           total_items: number
-          total_price: number
           user_id: string
         }
         Insert: {
-          confirmed_at?: string | null
-          confirmed_by?: string | null
-          created_at?: string
           id?: number
+          order_id: string
           product_id: string
           total_items: number
-          total_price: number
           user_id: string
         }
         Update: {
-          confirmed_at?: string | null
-          confirmed_by?: string | null
-          created_at?: string
           id?: number
+          order_id?: string
           product_id?: string
           total_items?: number
-          total_price?: number
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_product_id_fkey"
             columns: ["product_id"]
@@ -262,7 +296,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      order_status: "on progress" | "confirmed" | "shipping" | "arrived"
     }
     CompositeTypes: {
       [_ in never]: never

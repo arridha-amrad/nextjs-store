@@ -13,7 +13,7 @@ export default function Cart({ total }: Props) {
   return (
     <div className="relative">
       <Button
-        onClick={() => router.push('/checkout')}
+        onClick={() => router.push('/checkout', { scroll: false })}
         className="aspect-square"
         variant="secondary"
         size="icon"

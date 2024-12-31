@@ -1,13 +1,13 @@
 'use client';
 
-import { addToCart as atc } from '@/db/actions/checkout/create';
+import { addToCart as atc } from '@/db/actions/checkout';
 import { useToast } from '@/hooks/use-toast';
 import { Loader, ShoppingCart } from 'lucide-react';
 import Image from 'next/image';
+import { useTransition } from 'react';
 import { Database } from '../../../database.types';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { useTransition } from 'react';
 
 const IMAGE_BASE_URL =
   'https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products';

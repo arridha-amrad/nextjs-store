@@ -1,4 +1,4 @@
-import { CACHE_KEY_CARTS } from '@/cacheKey';
+import { CACHE_KEY_CARTS, CACHE_KEY_CARTS_TOTAL_PRICE } from '@/cacheKey';
 import { createClient } from '@/lib/supabase/server';
 import { unstable_cache } from 'next/cache';
 import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
@@ -19,7 +19,8 @@ const fetchMyCarts = async (cookie: ReadonlyRequestCookies) => {
       `,
       { count: 'exact' },
     )
-    .eq('user_id', data.user?.id ?? '');
+    .eq('user_id', data.user?.id ?? '')
+    .order('created_at', { ascending: false });
 
   return result;
 };
@@ -32,3 +33,43 @@ export const getCartsFromCache = unstable_cache(
   },
 );
 export type TCarts = Awaited<ReturnType<typeof fetchMyCarts>>;
+
+export const calculateCartTotalPrice = async (
+  cookie: ReadonlyRequestCookies,
+) => {
+  const sb = createClient(cookie);
+  const { data } = await sb.auth.getUser();
+
+  const { data: carts, error } = await sb
+    .from('carts')
+    .select(
+      `*,
+      products(
+        price
+      )
+      `,
+    )
+    .eq('user_id', data.user?.id ?? '')
+    .eq('is_select', true);
+
+  if (error) {
+    console.log(error);
+  }
+
+  let total = 0;
+  if (carts) {
+    for (const c of carts) {
+      const totalPrice = c.total * c.products.price;
+      total += totalPrice;
+    }
+  }
+  return total;
+};
+
+export const getCartTotalPriceFromCache = unstable_cache(
+  calculateCartTotalPrice,
+  [CACHE_KEY_CARTS_TOTAL_PRICE],
+  {
+    tags: [CACHE_KEY_CARTS_TOTAL_PRICE],
+  },
+);
