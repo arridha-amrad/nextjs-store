@@ -1,12 +1,11 @@
-import { CACHE_KEY_PRODUCT, CACHE_KEY_PRODUCTS } from "@/cacheKey";
-import { TEditProduct } from "@/lib/definitions/product";
-import { createClient } from "@/lib/supabase/server";
-import { unstable_cache } from "next/cache";
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import { CACHE_KEY_PRODUCT, CACHE_KEY_PRODUCTS } from '@/cacheKey';
+import { createClient } from '@/lib/supabase/server';
+import { unstable_cache } from 'next/cache';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 
 const fetchProducts = async (cookie: ReadonlyRequestCookies) => {
   const supabase = createClient(cookie);
-  const { data } = await supabase.from("products").select("*");
+  const { data } = await supabase.from('products').select('*');
   return data;
 };
 
@@ -15,16 +14,16 @@ export const getCachedProducts = unstable_cache(
   [CACHE_KEY_PRODUCTS],
   {
     tags: [CACHE_KEY_PRODUCTS],
-  }
+  },
 );
 
 const fetchProduct = async (
   productId: string,
-  cookie: ReadonlyRequestCookies
+  cookie: ReadonlyRequestCookies,
 ) => {
   const supabase = createClient(cookie);
   const { data } = await supabase
-    .from("products")
+    .from('products')
     .select(
       `*, 
     product_photo (
@@ -35,13 +34,17 @@ const fetchProduct = async (
             name
         )
     )
-    `
+    `,
     )
-    .eq("id", productId)
-    .single()
+    .eq('id', productId)
+    .single();
   return data;
 };
 
-export const getProductCache = unstable_cache(fetchProduct, [CACHE_KEY_PRODUCT], {
-  tags: [CACHE_KEY_PRODUCT],
-});
+export const getProductCache = unstable_cache(
+  fetchProduct,
+  [CACHE_KEY_PRODUCT],
+  {
+    tags: [CACHE_KEY_PRODUCT],
+  },
+);

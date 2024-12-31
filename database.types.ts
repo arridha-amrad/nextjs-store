@@ -9,6 +9,38 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      carts: {
+        Row: {
+          created_at: string
+          id: number
+          product_id: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          product_id: string
+          total: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          product_id?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carts_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           id: number
@@ -23,6 +55,47 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      orders: {
+        Row: {
+          confirmed_at: string | null
+          confirmed_by: string | null
+          created_at: string
+          id: number
+          product_id: string
+          total_items: number
+          total_price: number
+          user_id: string
+        }
+        Insert: {
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          id?: number
+          product_id: string
+          total_items: number
+          total_price: number
+          user_id: string
+        }
+        Update: {
+          confirmed_at?: string | null
+          confirmed_by?: string | null
+          created_at?: string
+          id?: number
+          product_id?: string
+          total_items?: number
+          total_price?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_category: {
         Row: {
