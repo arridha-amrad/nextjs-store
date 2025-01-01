@@ -1,46 +1,11 @@
-import { CACHE_KEY_PRODUCTS_ON_SALES } from '@/cacheKey'
-import { createClient } from '@/lib/supabase/server'
-import { unstable_cache } from 'next/cache'
-import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
-import { cookies } from 'next/headers'
+import { ProductsOnSales } from '@/db/queries/product'
 import ProductItem from './Item'
 
-const fetchProducts = async (cookie: ReadonlyRequestCookies) => {
-  const sb = createClient(cookie)
-  const { data, error } = await sb
-    .from('products')
-    .select(
-      `*,
-        product_photo(
-            *
-        )    
-    `,
-    )
-    .order('created_at', { ascending: false })
-  if (error) {
-    console.log(error)
-  }
-  return data
+type Props = {
+  products: ProductsOnSales[]
 }
 
-const getProductFromCache = unstable_cache(
-  fetchProducts,
-  [CACHE_KEY_PRODUCTS_ON_SALES],
-  { tags: [CACHE_KEY_PRODUCTS_ON_SALES] },
-)
-
-async function Products() {
-  const cookie = await cookies()
-  const products = await getProductFromCache(cookie)
-
-  if (!products) {
-    return (
-      <div>
-        <h1>Something went wrong</h1>
-      </div>
-    )
-  }
-
+async function Products({ products }: Props) {
   return (
     <div className="container mx-auto grid grid-cols-6 gap-x-4 gap-y-20">
       {products.map((p) => (

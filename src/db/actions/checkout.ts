@@ -2,6 +2,7 @@
 
 import {
   CACHE_KEY_CARTS,
+  CACHE_KEY_CARTS_COUNTER,
   CACHE_KEY_CARTS_TOTAL_PRICE,
   CACHE_KEY_PRODUCTS,
   CACHE_KEY_PRODUCTS_ON_SALES,
@@ -57,6 +58,8 @@ export const addToCart = async (productId: string) => {
 
   revalidateTag(CACHE_KEY_CARTS)
   revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
+  revalidateTag(CACHE_KEY_CARTS_COUNTER)
+
   return 'Your carts has been updated'
 }
 

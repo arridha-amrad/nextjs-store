@@ -3,5 +3,5 @@ export default function Page() {
     <div>
       <h1>Transaction page</h1>
     </div>
-  );
+  )
 }

@@ -1,25 +1,18 @@
 'use client'
 
+import { supabaseStorageBaseUrl } from '@/config'
 import { addToCart as atc } from '@/db/actions/checkout'
+import { ProductsOnSales } from '@/db/queries/product'
 import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 import { Loader, ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import { useTransition } from 'react'
-import { Database } from '../../../database.types'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
-import { cn } from '@/lib/utils'
-
-const IMAGE_BASE_URL =
-  'https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products'
-
-type Product = Database['public']['Tables']['products']['Row']
-type ProductPhoto = Database['public']['Tables']['product_photo']['Row']
 
 type Props = {
-  product: Product & {
-    product_photo: ProductPhoto[]
-  }
+  product: ProductsOnSales
 }
 
 function ProductItem({ product }: Props) {
@@ -52,7 +45,7 @@ function ProductItem({ product }: Props) {
           width={500}
           height={500}
           alt="product-photo"
-          src={`${IMAGE_BASE_URL}/${product.product_photo[0].url}`}
+          src={`${supabaseStorageBaseUrl}/${product.product_photo[0].url}`}
         />
       </div>
       <div className="px-4 py-2 flex-1">

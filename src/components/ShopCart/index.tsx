@@ -1,6 +1,5 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -8,29 +7,29 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { TCarts } from '@/db/queries/carts';
-import { ShoppingCart } from 'lucide-react';
-import { usePathname, useRouter } from 'next/navigation';
-import { ReactNode, useEffect, useState } from 'react';
-import CartItem from './CartItem';
+} from '@/components/ui/sheet'
+import { TCarts } from '@/db/queries/carts'
+import { ShoppingCart } from 'lucide-react'
+import { usePathname, useRouter } from 'next/navigation'
+import { ReactNode, useEffect, useState } from 'react'
+import CartItem from './CartItem'
 
 type Props = {
-  data: TCarts;
-  children: ReactNode;
-};
+  data: TCarts
+  children: ReactNode
+}
 
 export default function Cart({ data, children }: Props) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(true)
 
-  const pathname = usePathname();
-  const router = useRouter();
+  const pathname = usePathname()
+  const router = useRouter()
 
   useEffect(() => {
     if (pathname === '/checkout' && !open) {
-      router.back();
+      router.back()
     }
-  }, [open, pathname]);
+  }, [open, pathname])
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -62,5 +61,5 @@ export default function Cart({ data, children }: Props) {
         <SheetFooter>{children}</SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

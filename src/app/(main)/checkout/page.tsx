@@ -1,7 +1,7 @@
 export default async function Page() {
   return (
-    <div>
+    <div className="">
       <h1>Checkout Page</h1>
     </div>
-  );
+  )
 }
