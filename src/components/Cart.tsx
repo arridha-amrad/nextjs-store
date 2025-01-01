@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { ShoppingCart } from 'lucide-react';
-import { Button } from './ui/button';
-import { useRouter } from 'nextjs-toploader/app';
+import { ShoppingCart } from 'lucide-react'
+import { Button } from './ui/button'
+import { useRouter } from 'nextjs-toploader/app'
 
 type Props = {
-  total: number;
-};
+  total: number
+}
 
 export default function Cart({ total }: Props) {
-  const router = useRouter();
+  const router = useRouter()
   return (
     <div className="relative">
       <Button
@@ -20,9 +20,11 @@ export default function Cart({ total }: Props) {
       >
         <ShoppingCart />
       </Button>
-      <div className="absolute rounded-full -bottom-2 -right-2 w-6 flex items-center justify-center aspect-square bg-destructive">
-        <p className="text-sm text-white">{total}</p>
-      </div>
+      {total > 0 && (
+        <div className="absolute rounded-full -bottom-2 -right-2 w-6 flex items-center justify-center aspect-square bg-destructive">
+          <p className="text-sm text-white">{total}</p>
+        </div>
+      )}
     </div>
-  );
+  )
 }

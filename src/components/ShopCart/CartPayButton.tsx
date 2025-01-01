@@ -1,10 +1,11 @@
 'use client';
 
+import { createOrder } from '@/db/actions/checkout';
+import { useToast } from '@/hooks/use-toast';
 import { Loader } from 'lucide-react';
+import { useTransition } from 'react';
 import { Button } from '../ui/button';
 import { useShopCart } from './Context';
-import { createOrder } from '@/db/actions/checkout';
-import { useTransition } from 'react';
 
 type Props = {
   totalPrice: number;
@@ -13,10 +14,14 @@ type Props = {
 function CartPayButton({ totalPrice }: Props) {
   const { isLoading } = useShopCart();
   const [pending, startTransition] = useTransition();
+  const { toast } = useToast();
 
   const placeOrder = () => {
     startTransition(async () => {
-      await createOrder();
+      const result = await createOrder();
+      toast({
+        description: result,
+      });
     });
   };
 

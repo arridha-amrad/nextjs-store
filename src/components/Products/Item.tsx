@@ -1,45 +1,46 @@
-'use client';
+'use client'
 
-import { addToCart as atc } from '@/db/actions/checkout';
-import { useToast } from '@/hooks/use-toast';
-import { Loader, ShoppingCart } from 'lucide-react';
-import Image from 'next/image';
-import { useTransition } from 'react';
-import { Database } from '../../../database.types';
-import { Button } from '../ui/button';
-import { Card } from '../ui/card';
+import { addToCart as atc } from '@/db/actions/checkout'
+import { useToast } from '@/hooks/use-toast'
+import { Loader, ShoppingCart } from 'lucide-react'
+import Image from 'next/image'
+import { useTransition } from 'react'
+import { Database } from '../../../database.types'
+import { Button } from '../ui/button'
+import { Card } from '../ui/card'
+import { cn } from '@/lib/utils'
 
 const IMAGE_BASE_URL =
-  'https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products';
+  'https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products'
 
-type Product = Database['public']['Tables']['products']['Row'];
-type ProductPhoto = Database['public']['Tables']['product_photo']['Row'];
+type Product = Database['public']['Tables']['products']['Row']
+type ProductPhoto = Database['public']['Tables']['product_photo']['Row']
 
 type Props = {
   product: Product & {
-    product_photo: ProductPhoto[];
-  };
-};
+    product_photo: ProductPhoto[]
+  }
+}
 
 function ProductItem({ product }: Props) {
-  const { toast } = useToast();
-  const [pending, startTransition] = useTransition();
+  const { toast } = useToast()
+  const [pending, startTransition] = useTransition()
 
   const addToCart = () => {
     startTransition(async () => {
-      const result = await atc(product.id);
+      const result = await atc(product.id)
       if (result) {
         toast({
           description: `${product.name} added to cart`,
-        });
+        })
       } else {
         toast({
           variant: 'destructive',
           description: 'Failed to add product to your cart',
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   return (
     <Card
@@ -61,11 +62,19 @@ function ProductItem({ product }: Props) {
         <h2 className="text-xl font-bold leading-loose">$ {product.price}</h2>
       </div>
       <div className="bottom-0 absolute group-hover:opacity-0 opacity-100 left-0 py-2 px-4">
-        <p className="text-sm text-muted-foreground">5 Sold</p>
+        <p className="text-sm font-semibold text-muted-foreground">
+          <span className="pr-1">Stock</span>
+          <span className={cn(product.stock <= 5 ? 'text-destructive' : '')}>
+            {product.stock}
+          </span>
+        </p>
       </div>
       <Button
         disabled={pending}
-        className="w-full opacity-0 group-hover:opacity-100 ease-linear duration-300 transition-opacity relative select-none cursor-pointer"
+        className={cn(
+          'w-full group-hover:opacity-100 ease-linear duration-300 transition-opacity relative select-none cursor-pointer',
+          pending ? 'opacity-100' : 'opacity-0',
+        )}
         size="sm"
         onClick={addToCart}
       >
@@ -73,7 +82,7 @@ function ProductItem({ product }: Props) {
         Add To Cart
       </Button>
     </Card>
-  );
+  )
 }
 
-export default ProductItem;
+export default ProductItem

@@ -1,34 +1,44 @@
-import { createClient } from '@/lib/supabase/server';
-import { unstable_cache } from 'next/cache';
-import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
-import { cookies } from 'next/headers';
-import ProductItem from './Item';
+import { CACHE_KEY_PRODUCTS_ON_SALES } from '@/cacheKey'
+import { createClient } from '@/lib/supabase/server'
+import { unstable_cache } from 'next/cache'
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
+import { cookies } from 'next/headers'
+import ProductItem from './Item'
 
 const fetchProducts = async (cookie: ReadonlyRequestCookies) => {
-  const sb = createClient(cookie);
-  const { data, error } = await sb.from('products').select(`*,
+  const sb = createClient(cookie)
+  const { data, error } = await sb
+    .from('products')
+    .select(
+      `*,
         product_photo(
             *
         )    
-    `);
+    `,
+    )
+    .order('created_at', { ascending: false })
   if (error) {
-    console.log(error);
+    console.log(error)
   }
-  return data;
-};
+  return data
+}
 
-const getProductFromCache = unstable_cache(fetchProducts);
+const getProductFromCache = unstable_cache(
+  fetchProducts,
+  [CACHE_KEY_PRODUCTS_ON_SALES],
+  { tags: [CACHE_KEY_PRODUCTS_ON_SALES] },
+)
 
 async function Products() {
-  const cookie = await cookies();
-  const products = await getProductFromCache(cookie);
+  const cookie = await cookies()
+  const products = await getProductFromCache(cookie)
 
   if (!products) {
     return (
       <div>
         <h1>Something went wrong</h1>
       </div>
-    );
+    )
   }
 
   return (
@@ -37,7 +47,7 @@ async function Products() {
         <ProductItem product={p} key={p.id} />
       ))}
     </div>
-  );
+  )
 }
 
-export default Products;
+export default Products
