@@ -11,18 +11,25 @@ export type Database = {
     Tables: {
       account_roles: {
         Row: {
+          account_id: number
           role_id: number
-          user_id: string
         }
         Insert: {
+          account_id: number
           role_id: number
-          user_id?: string
         }
         Update: {
+          account_id?: number
           role_id?: number
-          user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "account_roles_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "user_role_role_id_fkey"
             columns: ["role_id"]
@@ -37,31 +44,25 @@ export type Database = {
           avatar: string | null
           created_at: string
           email: string | null
-          id: string
+          id: number
           name: string
-          phone_number: number | null
-          terms: boolean
-          updated_at: string
+          user_id: string | null
         }
         Insert: {
           avatar?: string | null
           created_at?: string
           email?: string | null
-          id?: string
+          id?: number
           name: string
-          phone_number?: number | null
-          terms: boolean
-          updated_at?: string
+          user_id?: string | null
         }
         Update: {
           avatar?: string | null
           created_at?: string
           email?: string | null
-          id?: string
+          id?: number
           name?: string
-          phone_number?: number | null
-          terms?: boolean
-          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }

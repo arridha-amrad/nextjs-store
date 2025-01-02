@@ -1,33 +1,22 @@
-import { AppSidebar } from '@/components/AppSidebar';
-import BreadcrumbAdmin from '@/components/BreadcrumbAdmin';
+import { AppSidebar } from '@/components/AppSidebar'
+import BreadcrumbAdmin from '@/components/BreadcrumbAdmin'
 
-import { Separator } from '@/components/ui/separator';
+import { Separator } from '@/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from '@/components/ui/sidebar';
-import { Supabase } from '@/lib/supabase/Supabase';
-import { unauthorized } from 'next/navigation';
-import { ReactNode } from 'react';
+} from '@/components/ui/sidebar'
+import { getUser } from '@/db/queries/users'
+import { cookies } from 'next/headers'
+import { unauthorized } from 'next/navigation'
+import { ReactNode } from 'react'
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const sb = await Supabase.initServerClient();
-  const {
-    data: { user },
-  } = await sb.auth.getUser();
-  if (user) {
-    const { data: role, error: errRole } = await sb
-      .from('user_role')
-      .select()
-      .eq('user_id', user.id)
-      .single();
-    if (errRole) {
-      console.log(errRole);
-    }
-    if (role && role.role_id !== 1) {
-      unauthorized();
-    }
+  const cookie = await cookies()
+  const user = await getUser(cookie)
+  if (!user || (user && user.role !== 'admin')) {
+    return unauthorized()
   }
   return (
     <SidebarProvider>
@@ -41,5 +30,5 @@ export default async function Layout({ children }: { children: ReactNode }) {
         {children}
       </SidebarInset>
     </SidebarProvider>
-  );
+  )
 }

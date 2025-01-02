@@ -33,6 +33,7 @@ export const getAuthUserAndClient = cache(
     if (error) {
       console.log(error)
     }
+
     return {
       supabase: sb,
       user,

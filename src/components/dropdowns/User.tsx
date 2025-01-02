@@ -1,6 +1,13 @@
 'use client'
 
-import { CircleDollarSign, LogOut, MonitorIcon, Moon, Sun } from 'lucide-react'
+import {
+  CircleDollarSign,
+  LogOut,
+  MonitorIcon,
+  Moon,
+  Sun,
+  UserCheck,
+} from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -68,6 +75,11 @@ export default function User({ avatar, name }: Props) {
             </DropdownMenuPortal>
           </DropdownMenuSub>
         </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => router.push('/admin')}>
+          <UserCheck />
+          <span>Admin</span>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => router.push('/transactions')}>
           <CircleDollarSign />

@@ -1,3 +1,5 @@
+'use server'
+
 import {
   CACHE_KEY_CARTS,
   CACHE_KEY_CARTS_COUNTER,

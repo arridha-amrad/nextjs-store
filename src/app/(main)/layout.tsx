@@ -1,16 +1,19 @@
 import AppHeader from '@/components/AppHeader'
 import Cart from '@/components/Cart'
 import { getCountItemsFromCache } from '@/db/queries/carts'
-import { getUserByEmailFromCache } from '@/db/queries/users'
+import { getUser } from '@/db/queries/users'
 import { cookies } from 'next/headers'
 import { ReactNode } from 'react'
 
 async function Layout({ children }: { children: ReactNode }) {
   const cookie = await cookies()
   const [user, count] = await Promise.all([
-    getUserByEmailFromCache(cookie),
+    getUser(cookie),
     getCountItemsFromCache(cookie),
   ])
+
+  console.log({ user })
+
   return (
     <div className="pb-20">
       <AppHeader user={user}>

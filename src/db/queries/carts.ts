@@ -31,7 +31,7 @@ export const getCartsFromCache = unstable_cache(
         `*,
           products (
             name,id,price,
-            product_photo (
+            product_photos (
               url
             )
           )

@@ -2,11 +2,6 @@ import { getAuthUserAndClient } from '@/lib/utils'
 import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 import { redirect } from 'next/navigation'
 
-// const getOrders = (orderId:string, cookie: ReadonlyRequestCookies) => {
-//   const cookie =
-//   const {data, error} = await
-// }
-
 export const getTransactionsFromCache = async (
   cookie: ReadonlyRequestCookies,
 ) => {
@@ -32,10 +27,10 @@ export const getTransactionsFromCache = async (
       .select(
         `*,
         products(
-        name,price,
-        product_photo (
-          url
-        )
+          name,price,
+          product_photos (
+            url
+          )
         )
       `,
       )

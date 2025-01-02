@@ -14,7 +14,7 @@ export const getProductsOnSalesFromCache = unstable_cache(
       .from('products')
       .select(
         `*,
-        product_photo(
+        product_photos(
           url
         )    
       `,
@@ -56,10 +56,10 @@ const fetchProduct = async (
     .from('products')
     .select(
       `*, 
-    product_photo (
+    product_photos (
         url
     ),
-    product_category (
+    product_categories (
         categories (
             name
         )

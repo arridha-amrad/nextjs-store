@@ -54,13 +54,25 @@ export async function signup(_: any, formData: FormData) {
     }
   }
 
-  await supabase.from('accounts').insert({
-    email,
-    name,
-    terms: true,
-  })
+  const { data: newAccount, error: errNewAcount } = await supabase
+    .from('accounts')
+    .insert({
+      email,
+      name,
+      user_id: user?.id,
+    })
+    .select()
+    .single()
 
-  await supabase.from('account_roles').insert({ role_id: 2, user_id: user?.id })
+  if (errNewAcount) {
+    console.log({ errNewAcount })
+  }
+
+  if (newAccount) {
+    await supabase
+      .from('account_roles')
+      .insert({ role_id: 2, account_id: newAccount.id })
+  }
 
   return {
     message: `An email has been sent to ${email}. Please follow the instructions to complete your registration`,

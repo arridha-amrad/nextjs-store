@@ -45,7 +45,7 @@ function ProductItem({ product }: Props) {
           width={500}
           height={500}
           alt="product-photo"
-          src={`${supabaseStorageBaseUrl}/${product.product_photo[0].url}`}
+          src={`${supabaseStorageBaseUrl}/${product.product_photos[0].url}`}
         />
       </div>
       <div className="px-4 py-2 flex-1">
