@@ -1,7 +1,6 @@
 'use client'
 
 import { supabaseStorageBaseUrl } from '@/config'
-import { addToCart as atc } from '@/db/actions/checkout'
 import { ProductsOnSales } from '@/db/queries/product'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
@@ -10,6 +9,7 @@ import Image from 'next/image'
 import { useTransition } from 'react'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
+import { create } from '@/db/actions/carts'
 
 type Props = {
   product: ProductsOnSales
@@ -21,7 +21,7 @@ function ProductItem({ product }: Props) {
 
   const addToCart = () => {
     startTransition(async () => {
-      const result = await atc(product.id)
+      const result = await create(product.id)
       if (result) {
         toast({
           description: `${product.name} added to cart`,

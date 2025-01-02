@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:gen": "npx supabase gen types typescript --project-id fzsbsdqssixryyzeanoc > database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -34,7 +35,7 @@
     "react-hook-form": "^7.54.2",
     "react-intersection-observer": "^9.14.1",
     "react-select": "^5.9.0",
-    "supabase": "^2.1.1",
+    "supabase": "^2.2.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.4",

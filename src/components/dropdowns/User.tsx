@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { LogOut, MonitorIcon, Moon, Sun } from 'lucide-react';
+import { CircleDollarSign, LogOut, MonitorIcon, Moon, Sun } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -14,17 +14,20 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useTheme } from 'next-themes';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+} from '@/components/ui/dropdown-menu'
+import { useTheme } from 'next-themes'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { logout } from '@/db/actions/auth/logout'
+import { useRouter } from 'nextjs-toploader/app'
 
 type Props = {
-  name: string;
-  avatar: string | null;
-};
+  name: string
+  avatar: string | null
+}
 
 export default function User({ avatar, name }: Props) {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme } = useTheme()
+  const router = useRouter()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -66,11 +69,16 @@ export default function User({ avatar, name }: Props) {
           </DropdownMenuSub>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/transactions')}>
+          <CircleDollarSign />
+          <span>Transactions</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={logout}>
           <LogOut />
           <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

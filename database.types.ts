@@ -9,6 +9,62 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      account_roles: {
+        Row: {
+          role_id: number
+          user_id: string
+        }
+        Insert: {
+          role_id: number
+          user_id?: string
+        }
+        Update: {
+          role_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_role_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      accounts: {
+        Row: {
+          avatar: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string
+          phone_number: number | null
+          terms: boolean
+          updated_at: string
+        }
+        Insert: {
+          avatar?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name: string
+          phone_number?: number | null
+          terms: boolean
+          updated_at?: string
+        }
+        Update: {
+          avatar?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string
+          phone_number?: number | null
+          terms?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       carts: {
         Row: {
           created_at: string
@@ -61,65 +117,29 @@ export type Database = {
       }
       orders: {
         Row: {
-          arrived_at: string | null
-          confirmed_at: string | null
-          confirmed_by: string | null
-          created_at: string
-          id: string
-          shipping_at: string | null
-          status: Database["public"]["Enums"]["order_status"]
-          value: number
-        }
-        Insert: {
-          arrived_at?: string | null
-          confirmed_at?: string | null
-          confirmed_by?: string | null
-          created_at?: string
-          id?: string
-          shipping_at?: string | null
-          status: Database["public"]["Enums"]["order_status"]
-          value: number
-        }
-        Update: {
-          arrived_at?: string | null
-          confirmed_at?: string | null
-          confirmed_by?: string | null
-          created_at?: string
-          id?: string
-          shipping_at?: string | null
-          status?: Database["public"]["Enums"]["order_status"]
-          value?: number
-        }
-        Relationships: []
-      }
-      orders_items: {
-        Row: {
           id: number
           order_id: string
           product_id: string
           total_items: number
-          user_id: string
         }
         Insert: {
           id?: number
           order_id: string
           product_id: string
           total_items: number
-          user_id: string
         }
         Update: {
           id?: number
           order_id?: string
           product_id?: string
           total_items?: number
-          user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "orders_items_order_id_fkey"
             columns: ["order_id"]
             isOneToOne: false
-            referencedRelation: "orders"
+            referencedRelation: "transactions"
             referencedColumns: ["id"]
           },
           {
@@ -131,7 +151,7 @@ export type Database = {
           },
         ]
       }
-      product_category: {
+      product_categories: {
         Row: {
           category_id: number
           product_id: string
@@ -146,7 +166,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "product_category_category_id_fkey"
+            foreignKeyName: "product_categories_category_id_fkey"
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
@@ -161,7 +181,7 @@ export type Database = {
           },
         ]
       }
-      product_photo: {
+      product_photos: {
         Row: {
           id: number
           product_id: string
@@ -217,7 +237,7 @@ export type Database = {
         }
         Relationships: []
       }
-      role: {
+      roles: {
         Row: {
           id: number
           title: string
@@ -232,59 +252,39 @@ export type Database = {
         }
         Relationships: []
       }
-      user_role: {
+      transactions: {
         Row: {
-          role_id: number
-          user_id: string
-        }
-        Insert: {
-          role_id: number
-          user_id?: string
-        }
-        Update: {
-          role_id?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_role_role_id_fkey"
-            columns: ["role_id"]
-            isOneToOne: false
-            referencedRelation: "role"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      users: {
-        Row: {
-          avatar: string | null
+          arrived_at: string | null
+          confirmed_at: string | null
+          confirmed_by: string | null
           created_at: string
-          email: string
           id: string
-          name: string
-          phone_number: number | null
-          terms: boolean
-          updated_at: string
+          shipping_at: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          user_id: string | null
+          value: number
         }
         Insert: {
-          avatar?: string | null
+          arrived_at?: string | null
+          confirmed_at?: string | null
+          confirmed_by?: string | null
           created_at?: string
-          email: string
           id?: string
-          name: string
-          phone_number?: number | null
-          terms: boolean
-          updated_at?: string
+          shipping_at?: string | null
+          status: Database["public"]["Enums"]["order_status"]
+          user_id?: string | null
+          value: number
         }
         Update: {
-          avatar?: string | null
+          arrived_at?: string | null
+          confirmed_at?: string | null
+          confirmed_by?: string | null
           created_at?: string
-          email?: string
           id?: string
-          name?: string
-          phone_number?: number | null
-          terms?: boolean
-          updated_at?: string
+          shipping_at?: string | null
+          status?: Database["public"]["Enums"]["order_status"]
+          user_id?: string | null
+          value?: number
         }
         Relationships: []
       }

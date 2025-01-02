@@ -1,26 +1,28 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { Search } from 'lucide-react';
-import { useInView } from 'react-intersection-observer';
-import User from './dropdowns/User';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Separator } from './ui/separator';
-import { ReactNode } from 'react';
+import { cn } from '@/lib/utils'
+import { Search } from 'lucide-react'
+import { useInView } from 'react-intersection-observer'
+import User from './dropdowns/User'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Separator } from './ui/separator'
+import { ReactNode } from 'react'
+import { useRouter } from 'nextjs-toploader/app'
 
 type User = {
-  avatar: string | null;
-  name: string;
-};
+  avatar: string | null
+  name: string
+}
 
 type Props = {
-  user: User | null;
-  children: ReactNode;
-};
+  user: User | null
+  children: ReactNode
+}
 
 function AppHeader({ user, children }: Props) {
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView()
+  const router = useRouter()
 
   return (
     <>
@@ -57,14 +59,18 @@ function AppHeader({ user, children }: Props) {
           </div>
         ) : (
           <div className="flex items-center">
-            <Button variant="link">Login</Button>
-            <Button variant="link">Register</Button>
+            <Button onClick={() => router.push('/login')} variant="link">
+              Login
+            </Button>
+            <Button onClick={() => router.push('/register')} variant="link">
+              Register
+            </Button>
           </div>
         )}
       </header>
       <div ref={ref} />
     </>
-  );
+  )
 }
 
-export default AppHeader;
+export default AppHeader

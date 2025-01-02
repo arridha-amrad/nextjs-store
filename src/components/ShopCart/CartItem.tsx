@@ -1,28 +1,27 @@
-'use client';
+'use client'
 
-import { supabaseStorageBaseUrl } from '@/config';
-import { deleteFromCart } from '@/db/actions/checkout';
-import { Loader, Loader2, Trash } from 'lucide-react';
-import Image from 'next/image';
-import { useState, useTransition } from 'react';
-import { Button } from '../ui/button';
-import { Checkbox } from '../ui/checkbox';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { useShopCart } from './Context';
-import CartItemCheckbox from './CartItemCheckbox';
-import CartItemTotalItem from './CartItemTotalItem';
-import { cn } from '@/lib/utils';
+import { supabaseStorageBaseUrl } from '@/config'
+import { destroy } from '@/db/actions/carts'
+import { cn } from '@/lib/utils'
+import { Loader, Trash } from 'lucide-react'
+import Image from 'next/image'
+import { useTransition } from 'react'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import CartItemCheckbox from './CartItemCheckbox'
+import CartItemTotalItem from './CartItemTotalItem'
+import { useShopCart } from './Context'
 
 type Props = {
-  id: number;
-  productName: string;
-  photo: string;
-  productId: string;
-  totalItem: number;
-  price: number;
-  isSelect: boolean;
-};
+  id: number
+  productName: string
+  photo: string
+  productId: string
+  totalItem: number
+  price: number
+  isSelect: boolean
+}
 
 export default function CartItem({
   photo,
@@ -32,15 +31,15 @@ export default function CartItem({
   totalItem,
   isSelect,
 }: Props) {
-  const [pending, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition()
 
   const deleteItem = () => {
     startTransition(async () => {
-      await deleteFromCart(id);
-    });
-  };
+      await destroy(id)
+    })
+  }
 
-  const { isLoading } = useShopCart();
+  const { isLoading } = useShopCart()
 
   return (
     <div
@@ -89,5 +88,5 @@ export default function CartItem({
         </div>
       </div>
     </div>
-  );
+  )
 }

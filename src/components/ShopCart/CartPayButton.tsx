@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import { createOrder } from '@/db/actions/checkout';
-import { useToast } from '@/hooks/use-toast';
-import { Loader } from 'lucide-react';
-import { useTransition } from 'react';
-import { Button } from '../ui/button';
-import { useShopCart } from './Context';
+import { create } from '@/db/actions/transactions'
+import { useToast } from '@/hooks/use-toast'
+import { Loader } from 'lucide-react'
+import { useTransition } from 'react'
+import { Button } from '../ui/button'
+import { useShopCart } from './Context'
 
 type Props = {
-  totalPrice: number;
-};
+  totalPrice: number
+}
 
 function CartPayButton({ totalPrice }: Props) {
-  const { isLoading } = useShopCart();
-  const [pending, startTransition] = useTransition();
-  const { toast } = useToast();
+  const { isLoading } = useShopCart()
+  const [pending, startTransition] = useTransition()
+  const { toast } = useToast()
 
   const placeOrder = () => {
     startTransition(async () => {
-      const result = await createOrder();
+      const result = await create()
       toast({
         description: result,
-      });
-    });
-  };
+      })
+    })
+  }
 
   return (
     <Button
@@ -37,7 +37,7 @@ function CartPayButton({ totalPrice }: Props) {
         {totalPrice > 0 && `$${totalPrice.toFixed(2)}`}
       </span>
     </Button>
-  );
+  )
 }
 
-export default CartPayButton;
+export default CartPayButton

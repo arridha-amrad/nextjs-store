@@ -1,10 +1,10 @@
-import RegisterForm from '@/components/forms/auth/RegisterForm';
-import { Metadata } from 'next';
+import RegisterForm from '@/components/forms/auth/RegisterForm'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Register',
   description: 'Create an account',
-};
+}
 
 export default function Page() {
   return (
@@ -13,5 +13,5 @@ export default function Page() {
         <RegisterForm />
       </div>
     </main>
-  );
+  )
 }

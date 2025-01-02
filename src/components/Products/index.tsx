@@ -7,7 +7,7 @@ type Props = {
 
 async function Products({ products }: Props) {
   return (
-    <div className="container mx-auto grid grid-cols-6 gap-x-4 gap-y-20">
+    <div className="grid lg:grid-cols-6 grid-cols-4 gap-x-4 gap-y-20">
       {products.map((p) => (
         <ProductItem product={p} key={p.id} />
       ))}

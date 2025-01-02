@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { useDebounce } from 'use-debounce';
-import { updateCartItem } from '@/db/actions/checkout';
-import { useShopCart } from './Context';
+import { useEffect, useState } from 'react'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import { useDebounce } from 'use-debounce'
+import { update } from '@/db/actions/carts'
+import { useShopCart } from './Context'
 
 type Props = {
-  id: number;
-  totalItem: number;
-};
+  id: number
+  totalItem: number
+}
 
 function CartItemTotalItem({ totalItem, id }: Props) {
-  const [total, setTotal] = useState(totalItem);
-  const [value, { isPending }] = useDebounce(total, 1000);
+  const [total, setTotal] = useState(totalItem)
+  const [value, { isPending }] = useDebounce(total, 1000)
 
-  const { setLoading } = useShopCart();
+  const { setLoading } = useShopCart()
 
   useEffect(() => {
-    updateCartItem(id, { total: value }).then(() => {
-      setLoading(false);
-    });
-  }, [value]);
+    update(id, { total: value }).then(() => {
+      setLoading(false)
+    })
+  }, [value])
 
   useEffect(() => {
     if (isPending()) {
-      setLoading(true);
+      setLoading(true)
     }
-  }, [isPending()]);
+  }, [isPending()])
 
   return (
     <div className="space-y-2">
@@ -40,7 +40,7 @@ function CartItemTotalItem({ totalItem, id }: Props) {
         value={total}
       />
     </div>
-  );
+  )
 }
 
-export default CartItemTotalItem;
+export default CartItemTotalItem

@@ -16,7 +16,7 @@ async function Layout({ children }: { children: ReactNode }) {
       <AppHeader user={user}>
         <Cart total={count} />
       </AppHeader>
-      {children}
+      <main className="container mx-auto">{children}</main>
     </div>
   )
 }

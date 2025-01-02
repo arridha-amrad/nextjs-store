@@ -1,43 +1,43 @@
-'use client';
+'use client'
 
-import MyCheckBox from '@/components/MyCheckbox';
-import { Button } from '@/components/ui/button';
+import MyCheckBox from '@/components/MyCheckbox'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { signup } from '@/db/actions/auth/signup';
-import { cn } from '@/lib/utils';
-import { EyeIcon, EyeOff, Loader2 } from 'lucide-react';
-import Link from 'next/link';
-import { ChangeEventHandler, useActionState, useEffect, useState } from 'react';
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { signup } from '@/db/actions/auth/signup'
+import { cn } from '@/lib/utils'
+import { EyeIcon, EyeOff, Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { ChangeEventHandler, useActionState, useEffect, useState } from 'react'
 
 export default function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
-  const [state, action, pending] = useActionState(signup, undefined);
+  const [state, action, pending] = useActionState(signup, undefined)
 
   const [formState, setFormState] = useState({
     email: '',
     name: '',
     password: '',
-  });
+  })
 
-  const [isShowPassword, setIsShowPassword] = useState(false);
-  const [isAcceptTerms, setAccepTerms] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(false)
+  const [isAcceptTerms, setAcceptTerms] = useState(false)
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
   useEffect(() => {
     if (state?.message) {
@@ -46,9 +46,9 @@ export default function RegisterForm({
         email: '',
         name: '',
         password: '',
-      });
+      })
     }
-  }, [state?.message]);
+  }, [state?.message])
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -132,7 +132,7 @@ export default function RegisterForm({
               <MyCheckBox
                 isChecked={isAcceptTerms}
                 label="Accept terms and conditions"
-                setCheck={setAccepTerms}
+                setCheck={setAcceptTerms}
               />
               <Button disabled={pending} type="submit" className="w-full">
                 {pending && <Loader2 className="animate-spin" />}
@@ -152,5 +152,5 @@ export default function RegisterForm({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
