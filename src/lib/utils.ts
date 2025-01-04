@@ -23,6 +23,12 @@ export function escapeHtml(text: string) {
   })
 }
 
+export const rupiahFormatter = new Intl.NumberFormat('id-ID', {
+  style: 'currency',
+  currency: 'IDR',
+  minimumFractionDigits: 0,
+})
+
 export const getAuthUserAndClient = cache(
   async (cookie: ReadonlyRequestCookies) => {
     const sb = createClient(cookie)

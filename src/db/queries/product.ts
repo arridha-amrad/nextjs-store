@@ -68,6 +68,7 @@ const fetchProduct = async (
     )
     .eq('id', productId)
     .single()
+
   return data
 }
 

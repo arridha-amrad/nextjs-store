@@ -1,4 +1,4 @@
-import FormCreateProduct from "@/components/forms/product/Create";
+import FormCreateProduct from '@/components/forms/product/Create'
 
 export default function Page() {
   return (
@@ -8,5 +8,5 @@ export default function Page() {
       </div>
       <FormCreateProduct />
     </main>
-  );
+  )
 }

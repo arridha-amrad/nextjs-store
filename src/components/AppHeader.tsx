@@ -9,6 +9,7 @@ import { Input } from './ui/input'
 import { Separator } from './ui/separator'
 import { ReactNode } from 'react'
 import { useRouter } from 'nextjs-toploader/app'
+import Link from 'next/link'
 
 type User = {
   avatar: string | null
@@ -32,14 +33,16 @@ function AppHeader({ user, children }: Props) {
           inView ? 'py-10' : 'py-4',
         )}
       >
-        <h1
-          className={cn(
-            'scroll-m-20 font-extrabold tracking-tight ',
-            inView ? 'text-5xl' : 'text-2xl',
-          )}
-        >
-          Nextstore
-        </h1>
+        <Link href="/">
+          <h1
+            className={cn(
+              'scroll-m-20 font-extrabold tracking-tight ',
+              inView ? 'text-5xl' : 'text-2xl',
+            )}
+          >
+            Nextstore
+          </h1>
+        </Link>
         <div className="flex items-center gap-4 flex-1">
           <Button variant="ghost">Categories</Button>
           <div className="relative w-full">

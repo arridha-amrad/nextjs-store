@@ -37,8 +37,7 @@ export default function Cart({ data, children }: Props) {
         <SheetHeader>
           <SheetTitle asChild>
             <div className="flex items-center gap-4 pb-4">
-              <h1 className="block text-2xl font-extrabold">Your Cart</h1>
-              <ShoppingCart />
+              <h1 className="block font-extrabold">Your Cart</h1>
             </div>
           </SheetTitle>
         </SheetHeader>
@@ -47,7 +46,7 @@ export default function Cart({ data, children }: Props) {
             {data.data?.map((v) => (
               <CartItem
                 id={v.id}
-                photo={v.products.product_photo[0].url}
+                photo={v.products.product_photos[0].url}
                 price={v.products.price}
                 productId={v.product_id}
                 productName={v.products.name}

@@ -46,7 +46,7 @@ export type Database = {
           email: string | null
           id: number
           name: string
-          user_id: string | null
+          user_id: string
         }
         Insert: {
           avatar?: string | null
@@ -54,7 +54,7 @@ export type Database = {
           email?: string | null
           id?: number
           name: string
-          user_id?: string | null
+          user_id: string
         }
         Update: {
           avatar?: string | null
@@ -62,7 +62,7 @@ export type Database = {
           email?: string | null
           id?: number
           name?: string
-          user_id?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -73,7 +73,7 @@ export type Database = {
           is_select: boolean
           product_id: string
           total: number
-          user_id: string
+          user_id: string | null
         }
         Insert: {
           created_at?: string
@@ -81,7 +81,7 @@ export type Database = {
           is_select?: boolean
           product_id: string
           total: number
-          user_id: string
+          user_id?: string | null
         }
         Update: {
           created_at?: string
@@ -89,7 +89,7 @@ export type Database = {
           is_select?: boolean
           product_id?: string
           total?: number
-          user_id?: string
+          user_id?: string | null
         }
         Relationships: [
           {

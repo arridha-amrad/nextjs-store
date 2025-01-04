@@ -6,15 +6,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { getCachedProducts } from '@/db/queries/product';
-import { cookies } from 'next/headers';
-import Link from 'next/link';
-import AlertDialogDeleteProduct from './alertDialog/DeleteProduct';
+} from '@/components/ui/table'
+import { getCachedProducts } from '@/db/queries/product'
+import { cookies } from 'next/headers'
+import Link from 'next/link'
+import AlertDialogDeleteProduct from './alertDialog/DeleteProduct'
+import { rupiahFormatter } from '@/lib/utils'
 
 async function TableProducts() {
-  const cookie = await cookies();
-  const products = await getCachedProducts(cookie);
+  const cookie = await cookies()
+  const products = await getCachedProducts(cookie)
   return (
     <Table>
       <TableCaption>A list of your ready stock products.</TableCaption>
@@ -33,7 +34,7 @@ async function TableProducts() {
             <TableCell className="">{i + 1}</TableCell>
             <TableCell className="max-w-sm">{product.name}</TableCell>
             <TableCell>{product.stock}</TableCell>
-            <TableCell>{product.price}</TableCell>
+            <TableCell>{rupiahFormatter.format(product.price)}</TableCell>
             <TableCell className="text-right space-x-4">
               <Link href={`/admin/products/${product.id}`}>Edit</Link>
               <AlertDialogDeleteProduct id={product.id} />
@@ -42,7 +43,7 @@ async function TableProducts() {
         ))}
       </TableBody>
     </Table>
-  );
+  )
 }
 
-export default TableProducts;
+export default TableProducts

@@ -3,7 +3,7 @@
 import { supabaseStorageBaseUrl } from '@/config'
 import { ProductsOnSales } from '@/db/queries/product'
 import { useToast } from '@/hooks/use-toast'
-import { cn } from '@/lib/utils'
+import { cn, rupiahFormatter } from '@/lib/utils'
 import { Loader, ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import { useTransition } from 'react'
@@ -52,7 +52,9 @@ function ProductItem({ product }: Props) {
         <h1 className="line-clamp-2 text-sm text-muted-foreground">
           {product.name}
         </h1>
-        <h2 className="text-xl font-bold leading-loose">$ {product.price}</h2>
+        <h2 className="text-lg font-bold leading-loose">
+          {rupiahFormatter.format(product.price)}
+        </h2>
       </div>
       <div className="bottom-0 absolute group-hover:opacity-0 opacity-100 left-0 py-2 px-4">
         <p className="text-sm font-semibold text-muted-foreground">

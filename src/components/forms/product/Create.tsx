@@ -1,23 +1,23 @@
-'use client';
+'use client'
 
 import SelectCategories, {
   SelectCategoriesHandler,
-} from '@/components/SelectCategories';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { createProduct } from '@/db/actions/product/create';
+} from '@/components/SelectCategories'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { createProduct } from '@/db/actions/product/create'
 
-import { useToast } from '@/hooks/use-toast';
-import { Loader } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast'
+import { Loader } from 'lucide-react'
 import {
   ChangeEventHandler,
   useActionState,
   useEffect,
   useRef,
   useState,
-} from 'react';
+} from 'react'
 
 export default function FormCreateProduct() {
   const [formState, setFormState] = useState({
@@ -26,62 +26,62 @@ export default function FormCreateProduct() {
     price: 0,
     stock: 0,
     photosTotalSize: 0,
-  });
+  })
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
-  const [files, setFiles] = useState<File[]>([]);
-  const [state, action, pending] = useActionState(createProduct, undefined);
-  const { toast } = useToast();
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
-  const categoriesRef = useRef<SelectCategoriesHandler>(null);
-  const { description, name, price, stock, photosTotalSize } = formState;
+  const [files, setFiles] = useState<File[]>([])
+  const [state, action, pending] = useActionState(createProduct, undefined)
+  const { toast } = useToast()
+  const inputFileRef = useRef<HTMLInputElement | null>(null)
+  const categoriesRef = useRef<SelectCategoriesHandler>(null)
+  const { description, name, price, stock, photosTotalSize } = formState
 
   useEffect(() => {
     if (state?.message) {
       toast({
         description: state.message,
-      });
-      categoriesRef.current?.resetCategories();
+      })
+      categoriesRef.current?.resetCategories()
       setFormState({
         ...formState,
         description: '',
         name: '',
         price: 0,
         stock: 0,
-      });
+      })
     }
     // eslint-disable-next-line
-  }, [state?.message]);
+  }, [state?.message, pending])
 
   useEffect(() => {
     if (state?.error) {
       toast({
         description: state.error,
         variant: 'destructive',
-      });
+      })
     }
     // eslint-disable-next-line
-  }, [state?.error]);
+  }, [state?.error, pending])
 
   useEffect(() => {
     if (files.length > 0) {
-      let total = 0;
+      let total = 0
       for (const file of files) {
-        total += file.size;
+        total += file.size
       }
       setFormState({
         ...formState,
         photosTotalSize: total,
-      });
+      })
     }
     // eslint-disable-next-line
-  }, [files]);
+  }, [files])
 
   return (
     <fieldset disabled={pending}>
@@ -108,16 +108,23 @@ export default function FormCreateProduct() {
           )}
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 ">
           <Label htmlFor="price">Price</Label>
-          <Input
-            id="price"
-            type="number"
-            step={0.01}
-            name="price"
-            value={price}
-            onChange={handleChange}
-          />
+          <div className="relative">
+            <Input
+              id="price"
+              className="pl-12"
+              type="number"
+              name="price"
+              value={price}
+              onChange={handleChange}
+            />
+            <div className="absolute top-0 left-0">
+              <Button variant="ghost" size="icon">
+                Rp
+              </Button>
+            </div>
+          </div>
           {state?.errors?.price && (
             <p className="text-destructive text-xs">{state?.errors.price[0]}</p>
           )}
@@ -149,7 +156,7 @@ export default function FormCreateProduct() {
               setFormState({
                 ...formState,
                 description: e.target.value,
-              });
+              })
             }}
           />
           {state?.errors?.description && (
@@ -166,8 +173,8 @@ export default function FormCreateProduct() {
               ref={inputFileRef}
               id="photos"
               onChange={(e) => {
-                const f = e.target.files as unknown;
-                setFiles(f as File[]);
+                const f = e.target.files as unknown
+                setFiles(f as File[])
               }}
               type="file"
               name="photos"
@@ -194,5 +201,5 @@ export default function FormCreateProduct() {
         </Button>
       </form>
     </fieldset>
-  );
+  )
 }

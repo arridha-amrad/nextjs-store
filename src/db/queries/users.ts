@@ -17,11 +17,11 @@ export const getUser = unstable_cache(
     const { data: ac, error: errac } = await supabase
       .from('account_roles')
       .select(
-        `
+        `*,
         roles(
           title
-        )  
-      `,
+        )
+        `,
       )
       .eq('account_id', data.id ?? 0)
       .single()
