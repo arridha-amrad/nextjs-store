@@ -119,26 +119,36 @@ export type Database = {
       orders: {
         Row: {
           id: number
-          order_id: string
           product_id: string
           total_items: number
+          transaction_id: string
+          user_id: string
         }
         Insert: {
           id?: number
-          order_id: string
           product_id: string
           total_items: number
+          transaction_id: string
+          user_id: string
         }
         Update: {
           id?: number
-          order_id?: string
           product_id?: string
           total_items?: number
+          transaction_id?: string
+          user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "orders_items_order_id_fkey"
-            columns: ["order_id"]
+            columns: ["transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transaction_details"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_items_order_id_fkey"
+            columns: ["transaction_id"]
             isOneToOne: false
             referencedRelation: "transactions"
             referencedColumns: ["id"]
@@ -291,7 +301,16 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      transaction_details: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          items: Json | null
+          status: Database["public"]["Enums"]["order_status"] | null
+          value: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

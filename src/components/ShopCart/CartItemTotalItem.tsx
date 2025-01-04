@@ -32,7 +32,11 @@ function CartItemTotalItem({ totalItem, id }: Props) {
     <div className="space-y-2">
       <Label htmlFor="total">Total</Label>
       <Input
-        onChange={(e) => setTotal(parseInt(e.target.value))}
+        onChange={(e) =>
+          isNaN(parseInt(e.target.value))
+            ? 0
+            : setTotal(parseInt(e.target.value))
+        }
         id="total"
         type="number"
         step={1}

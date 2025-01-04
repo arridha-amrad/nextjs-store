@@ -54,24 +54,26 @@ export async function signup(_: any, formData: FormData) {
     }
   }
 
-  const { data: newAccount, error: errNewAcount } = await supabase
-    .from('accounts')
-    .insert({
-      email,
-      name,
-      user_id: user?.id,
-    })
-    .select()
-    .single()
+  if (user) {
+    const { data: newAccount, error: errNewAcount } = await supabase
+      .from('accounts')
+      .insert({
+        email,
+        name,
+        user_id: user?.id,
+      })
+      .select()
+      .single()
 
-  if (errNewAcount) {
-    console.log({ errNewAcount })
-  }
+    if (errNewAcount) {
+      console.log({ errNewAcount })
+    }
 
-  if (newAccount) {
-    await supabase
-      .from('account_roles')
-      .insert({ role_id: 2, account_id: newAccount.id })
+    if (newAccount) {
+      await supabase
+        .from('account_roles')
+        .insert({ role_id: 2, account_id: newAccount.id })
+    }
   }
 
   return {

@@ -42,6 +42,7 @@ function ProductItem({ product }: Props) {
     >
       <div className="overflow-hidden">
         <Image
+          className="object-cover w-full aspect-square"
           width={500}
           height={500}
           alt="product-photo"

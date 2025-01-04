@@ -2,7 +2,7 @@
 
 import { supabaseStorageBaseUrl } from '@/config'
 import { destroy } from '@/db/actions/carts'
-import { cn } from '@/lib/utils'
+import { cn, rupiahFormatter } from '@/lib/utils'
 import { Loader, Trash } from 'lucide-react'
 import Image from 'next/image'
 import { useTransition } from 'react'
@@ -60,14 +60,9 @@ export default function CartItem({
         <div className="w-full space-y-2 ">
           <CartItemTotalItem id={id} totalItem={totalItem} />
           <div className="space-y-2 relative">
-            <Label htmlFor="price">Price</Label>
-            <Input
-              disabled={isLoading}
-              id="price"
-              type="number"
-              readOnly
-              value={(price * totalItem).toFixed(2)}
-            />
+            <div className="py-2">
+              <h1>{rupiahFormatter.format(price * totalItem)}</h1>
+            </div>
             {isLoading && (
               <div className=" absolute bottom-2 right-5">
                 <Loader className="animate-spin w-4" />

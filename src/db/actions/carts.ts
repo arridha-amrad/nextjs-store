@@ -71,6 +71,7 @@ export const destroy = async (cartId: number) => {
   }
   revalidateTag(CACHE_KEY_CARTS)
   revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
+  revalidateTag(CACHE_KEY_CARTS_COUNTER)
 }
 
 type UpdateProps = Database['public']['Tables']['carts']['Update']

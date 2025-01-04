@@ -2,6 +2,7 @@
 
 import {
   CACHE_KEY_CARTS,
+  CACHE_KEY_CARTS_COUNTER,
   CACHE_KEY_CARTS_TOTAL_PRICE,
   CACHE_KEY_PRODUCTS_ON_SALES,
   CACHE_KEY_TRANSACTIONS,
@@ -28,7 +29,7 @@ export const create = async () => {
     .select(
       `*,
         products(
-            price
+          price
         )
         `,
     )
@@ -57,7 +58,8 @@ export const create = async () => {
     carts.map((v) => ({
       product_id: v.product_id,
       total_items: v.total,
-      order_id: data?.id ?? '',
+      transaction_id: data?.id ?? '',
+      user_id: user.id,
     })),
   )
 
@@ -107,6 +109,7 @@ export const create = async () => {
   revalidateTag(CACHE_KEY_CARTS)
   revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
   revalidateTag(CACHE_KEY_PRODUCTS_ON_SALES)
+  revalidateTag(CACHE_KEY_CARTS_COUNTER)
 
   return 'Your request order has been placed successfully'
 }

@@ -6,6 +6,7 @@ import { Loader } from 'lucide-react'
 import { useTransition } from 'react'
 import { Button } from '../ui/button'
 import { useShopCart } from './Context'
+import { rupiahFormatter } from '@/lib/utils'
 
 type Props = {
   totalPrice: number
@@ -33,8 +34,8 @@ function CartPayButton({ totalPrice }: Props) {
     >
       {(isLoading || pending) && <Loader className="animate-spin" />}
       Pay
-      <span className="pl-1">
-        {totalPrice > 0 && `$${totalPrice.toFixed(2)}`}
+      <span className="">
+        {totalPrice > 0 && `${rupiahFormatter.format(totalPrice)}`}
       </span>
     </Button>
   )
