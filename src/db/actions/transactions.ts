@@ -8,6 +8,7 @@ import {
   CACHE_KEY_TRANSACTIONS,
 } from '@/cacheKey'
 import { Supabase } from '@/lib/supabase/Supabase'
+import { generateInvoice } from '@/lib/utils'
 import { revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -49,6 +50,7 @@ export const create = async () => {
       status: 'on progress',
       value: 0,
       user_id: user.id,
+      invoice: generateInvoice(),
     })
     .select()
     .single()

@@ -2,7 +2,7 @@ import FormCreateProduct from '@/components/forms/product/Create'
 
 export default function Page() {
   return (
-    <main className="py-4 px-16">
+    <main className="">
       <div className="mb-10">
         <h1 className="text-4xl font-bold">Add Product</h1>
       </div>

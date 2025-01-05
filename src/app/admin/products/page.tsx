@@ -1,15 +1,15 @@
-import TableProducts from "@/components/TableProducts";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Plus } from "lucide-react";
-import Link from "next/link";
+import TableProducts from '@/components/TableProducts'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { Plus } from 'lucide-react'
+import Link from 'next/link'
 
 export default function Page() {
   return (
-    <main className="py-4 px-16">
+    <main className="py-4">
       <div className="flex items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold">All Products</h1>
+          <h1 className="text-4xl font-bold tracking-tight">All Products</h1>
         </div>
         <Separator orientation="vertical" className="mr-2 h-4" />
         <Button asChild>
@@ -23,5 +23,5 @@ export default function Page() {
         <TableProducts />
       </div>
     </main>
-  );
+  )
 }

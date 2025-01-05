@@ -27,7 +27,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
           <Separator orientation="vertical" className="mr-2 h-4" />
           <BreadcrumbAdmin />
         </header>
-        {children}
+        <div className="py-4 px-16">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   )

@@ -270,6 +270,7 @@ export type Database = {
           confirmed_by: string | null
           created_at: string
           id: string
+          invoice: string | null
           shipping_at: string | null
           status: Database["public"]["Enums"]["order_status"]
           user_id: string | null
@@ -281,6 +282,7 @@ export type Database = {
           confirmed_by?: string | null
           created_at?: string
           id?: string
+          invoice?: string | null
           shipping_at?: string | null
           status: Database["public"]["Enums"]["order_status"]
           user_id?: string | null
@@ -292,6 +294,7 @@ export type Database = {
           confirmed_by?: string | null
           created_at?: string
           id?: string
+          invoice?: string | null
           shipping_at?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           user_id?: string | null
@@ -305,6 +308,7 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string | null
+          invoice: string | null
           items: Json | null
           status: Database["public"]["Enums"]["order_status"] | null
           value: number | null

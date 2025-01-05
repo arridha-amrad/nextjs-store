@@ -8,6 +8,7 @@ export const CACHE_KEY_CARTS_COUNTER = 'carts counter'
 
 // orders
 export const CACHE_KEY_TRANSACTIONS = 'transactions'
+export const CACHE_KEY_TRANSACTIONS_ADMIN = 'transactions admin'
 
 // products
 export const CACHE_KEY_PRODUCTS_ON_SALES = 'products on sales'

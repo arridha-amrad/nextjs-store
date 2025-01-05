@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import SearchForm from "@/components/SearchForm";
-import VersionSwitcher from "@/components/VersionSwitcher";
+import SearchForm from '@/components/SearchForm'
+import VersionSwitcher from '@/components/VersionSwitcher'
 import {
   Sidebar,
   SidebarContent,
@@ -13,88 +13,92 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+} from '@/components/ui/sidebar'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 // This is sample data.
 const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
+  versions: ['1.0.1', '1.1.0-alpha', '2.0.0-beta1'],
   navMain: [
     {
-      title: "Dashboard",
-      url: "/admin",
+      title: 'Dashboard',
+      url: '/admin',
       items: [
         {
-          title: "Dashboard",
-          url: "/admin",
+          title: 'Dashboard',
+          url: '/admin',
         },
         {
-          title: "Products",
-          url: "/admin/products",
+          title: 'Products',
+          url: '/admin/products',
+        },
+        {
+          title: 'Transactions',
+          url: '/admin/transactions',
         },
       ],
     },
     {
-      title: "Building Your Application",
-      url: "#",
+      title: 'Building Your Application',
+      url: '#',
       items: [
         {
-          title: "Routing",
-          url: "#",
+          title: 'Routing',
+          url: '#',
         },
         {
-          title: "Data Fetching",
-          url: "#",
+          title: 'Data Fetching',
+          url: '#',
           isActive: true,
         },
         {
-          title: "Rendering",
-          url: "#",
+          title: 'Rendering',
+          url: '#',
         },
         {
-          title: "Caching",
-          url: "#",
+          title: 'Caching',
+          url: '#',
         },
         {
-          title: "Styling",
-          url: "#",
+          title: 'Styling',
+          url: '#',
         },
         {
-          title: "Optimizing",
-          url: "#",
+          title: 'Optimizing',
+          url: '#',
         },
         {
-          title: "Configuring",
-          url: "#",
+          title: 'Configuring',
+          url: '#',
         },
         {
-          title: "Testing",
-          url: "#",
+          title: 'Testing',
+          url: '#',
         },
         {
-          title: "Authentication",
-          url: "#",
+          title: 'Authentication',
+          url: '#',
         },
         {
-          title: "Deploying",
-          url: "#",
+          title: 'Deploying',
+          url: '#',
         },
         {
-          title: "Upgrading",
-          url: "#",
+          title: 'Upgrading',
+          url: '#',
         },
         {
-          title: "Examples",
-          url: "#",
+          title: 'Examples',
+          url: '#',
         },
       ],
     },
   ],
-};
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
+  const pathname = usePathname()
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -125,5 +129,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }

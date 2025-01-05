@@ -40,7 +40,7 @@ function ProductItem({ product }: Props) {
       className="overflow-hidden group flex flex-col relative"
       key={product.id}
     >
-      <div className="overflow-hidden">
+      <div className="overflow-hidden mb-6">
         <Image
           className="object-cover w-full aspect-square"
           width={500}

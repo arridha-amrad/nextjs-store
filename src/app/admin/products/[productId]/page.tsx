@@ -20,9 +20,9 @@ async function Page({ params }: { params: Promise<{ productId: string }> }) {
   } = product
 
   return (
-    <main className="py-4 px-16">
+    <main className="">
       <div className="mb-10">
-        <h1 className="text-4xl font-bold">Edit Product</h1>
+        <h1 className="text-4xl font-bold tracking-tight">Edit Product</h1>
       </div>
       <FormEditProduct
         props={{
