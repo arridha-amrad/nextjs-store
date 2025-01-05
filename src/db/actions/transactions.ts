@@ -6,7 +6,9 @@ import {
   CACHE_KEY_CARTS_TOTAL_PRICE,
   CACHE_KEY_PRODUCTS_ON_SALES,
   CACHE_KEY_TRANSACTIONS,
+  CACHE_KEY_TRANSACTIONS_ADMIN,
 } from '@/cacheKey'
+import { TransactionStatus } from '@/lib/definitions/transaction'
 import { Supabase } from '@/lib/supabase/Supabase'
 import { generateInvoice } from '@/lib/utils'
 import { revalidateTag } from 'next/cache'
@@ -114,4 +116,19 @@ export const create = async () => {
   revalidateTag(CACHE_KEY_CARTS_COUNTER)
 
   return 'Your request order has been placed successfully'
+}
+
+export const updateTransactionStatus = async (
+  invoice: string,
+  status: TransactionStatus,
+) => {
+  const supabase = await Supabase.initServerClient()
+  await supabase
+    .from('transactions')
+    .update({
+      status,
+    })
+    .eq('invoice', invoice)
+
+  revalidateTag(CACHE_KEY_TRANSACTIONS_ADMIN)
 }

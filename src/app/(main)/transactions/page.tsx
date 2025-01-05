@@ -37,7 +37,7 @@ export default async function Page() {
                 <div className="flex items-center">
                   <div className="space-y-2 py-4 flex-1 border-r">
                     {t.items.map((product) => (
-                      <div className="flex">
+                      <div key={product.id} className="flex">
                         <div
                           className="flex flex-1 gap-4 items-start"
                           key={product.id}
