@@ -6,11 +6,7 @@ import {
   CACHE_KEY_CARTS_TOTAL_PRICE,
   CACHE_KEY_CUSTOMER_TRANSACTIONS,
   CACHE_KEY_PRODUCTS_ON_SALES,
-<<<<<<< HEAD
-  CACHE_KEY_TRANSACTIONS,
   CACHE_KEY_TRANSACTIONS_ADMIN,
-=======
->>>>>>> test2
 } from '@/cacheKey'
 import { TransactionStatus } from '@/lib/definitions/transaction'
 import { Supabase } from '@/lib/supabase/Supabase'

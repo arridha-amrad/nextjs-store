@@ -60,6 +60,7 @@ export const editProductAction = async (_: unknown, formdata: FormData) => {
     .eq('id', productId)
 
   if (errorUpdate) {
+    console.log(errorUpdate)
     return {
       error: errorUpdate.message,
     }
@@ -75,6 +76,7 @@ export const editProductAction = async (_: unknown, formdata: FormData) => {
       )
       .eq('product_id', productId)
     if (err) {
+      console.log(err)
       return {
         error: err.message,
       }

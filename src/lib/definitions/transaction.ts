@@ -1,3 +1,4 @@
+import { getTransactionForAdmin } from '@/db/queries/transactions'
 import { Database } from '../../../database.types'
 
 type TransactionItem = {
@@ -22,3 +23,7 @@ export type Transaction = {
 }
 
 export type TransactionStatus = Database['public']['Enums']['order_status']
+
+export type TransactionAdmin = NonNullable<
+  Awaited<ReturnType<typeof getTransactionForAdmin>>
+>
