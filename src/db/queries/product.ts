@@ -8,7 +8,7 @@ import { unstable_cache } from 'next/cache'
 import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 
 export const getProductsOnSalesFromCache = unstable_cache(
-  async (cookie: ReadonlyRequestCookies) => {
+  async (cookie: ReadonlyRequestCookies, searchKey?: string) => {
     const sb = createClient(cookie)
     const { data, error } = await sb
       .from('products')
@@ -20,6 +20,7 @@ export const getProductsOnSalesFromCache = unstable_cache(
       `,
       )
       .order('created_at', { ascending: false })
+      .ilike('name', `%${searchKey ?? ''}%`)
     if (error) {
       console.log(error)
     }

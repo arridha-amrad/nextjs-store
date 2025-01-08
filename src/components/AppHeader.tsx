@@ -1,16 +1,15 @@
 'use client'
 
-import { cn } from '@/lib/utils'
-import { Search } from 'lucide-react'
-import { useInView } from 'react-intersection-observer'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Separator } from './ui/separator'
-import { ReactNode } from 'react'
-import { useRouter } from 'nextjs-toploader/app'
-import Link from 'next/link'
-import DropDownUser from './dropdowns/User'
 import { AuthUser } from '@/lib/definitions/auth'
+import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import { useRouter } from 'nextjs-toploader/app'
+import { ReactNode } from 'react'
+import { useInView } from 'react-intersection-observer'
+import DropDownUser from './dropdowns/User'
+import InputSearchProduct from './InputSearchProduct'
+import { Button } from './ui/button'
+import { Separator } from './ui/separator'
 
 type Props = {
   user: AuthUser | null
@@ -41,14 +40,7 @@ function AppHeader({ user, children }: Props) {
         </Link>
         <div className="flex items-center gap-4 flex-1">
           <Button variant="ghost">Categories</Button>
-          <div className="relative w-full">
-            <div className="absolute top-0 left-0">
-              <Button size="icon" variant="outline">
-                <Search />
-              </Button>
-            </div>
-            <Input className="w-full pl-14" placeholder="Search in nextstore" />
-          </div>
+          <InputSearchProduct />
           {children}
         </div>
         <Separator className="h-[25px]" orientation="vertical" />
