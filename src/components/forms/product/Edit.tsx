@@ -67,6 +67,13 @@ export default function FormEditProduct({ props }: Props) {
     // eslint-disable-next-line
   }, [state?.error])
 
+  const removeFromPreview = (i: number) => {
+    const filteredPreviews = previews.filter((_, j) => j !== i)
+    const filteredFiles = filesToUpload.filter((_, j) => j !== i)
+    setPreviews(filteredPreviews)
+    setFilesToUpload(filteredFiles)
+  }
+
   return (
     <fieldset disabled={isPending}>
       <form
@@ -161,14 +168,14 @@ export default function FormEditProduct({ props }: Props) {
               <div className="absolute inset-0  group-hover:bg-black/65 transition-all duration-200 ease-linear" />
               <Image
                 priority
-                className="w-full h-auto object-fill object-center"
+                className="w-full aspect-square h-auto object-cover object-center"
                 width={500}
                 height={500}
                 src={`${supabaseStorageBaseUrl}/${v}`}
                 alt="product_photo"
               />
               <div className="absolute opacity-0 group-hover:opacity-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 duration-100 ease-linear transition-opacity">
-                <DeletePhoto />
+                <DeletePhoto productId={id} filePath={v} />
               </div>
             </div>
           ))}
@@ -180,14 +187,20 @@ export default function FormEditProduct({ props }: Props) {
             >
               <div className="absolute inset-0  group-hover:bg-black/65 transition-all duration-200 ease-linear" />
               <Image
-                className="w-full h-auto object-fill object-center"
+                className="w-full aspect-square h-auto object-cover object-center"
                 width={500}
                 height={500}
                 src={v}
                 alt="product_photo"
               />
               <div className="absolute opacity-0 group-hover:opacity-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 duration-100 ease-linear transition-opacity">
-                <DeletePhoto />
+                <Button
+                  type="button"
+                  onClick={() => removeFromPreview(i)}
+                  variant="destructive"
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           ))}
@@ -208,7 +221,6 @@ export default function FormEditProduct({ props }: Props) {
                   onChange={(e) => {
                     const newFiles = e.target.files
                     if (newFiles) {
-                      console.log(newFiles)
                       setFile(newFiles[0])
                     }
                   }}

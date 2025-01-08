@@ -1,3 +1,5 @@
+'use client'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,15 +10,37 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Trash } from "lucide-react";
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import { removeProductPhoto } from '@/db/actions/product/delete'
+import { useToast } from '@/hooks/use-toast'
+import { Loader, Trash } from 'lucide-react'
+import { useState, useTransition } from 'react'
 
-function AlertDialogDeletePhoto() {
+type Props = {
+  filePath: string
+  productId: string
+}
+
+function AlertDialogDeletePhoto({ filePath, productId }: Props) {
+  const [isPending, startTransition] = useTransition()
+  const [open, setOpen] = useState(false)
+  const { toast } = useToast()
+  const deletePhoto = () => {
+    startTransition(async () => {
+      const result = await removeProductPhoto(productId, filePath)
+      if (result) {
+        toast({
+          description: 'Photo deleted',
+        })
+      }
+      setOpen(false)
+    })
+  }
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">
+        <Button onClick={() => setOpen(true)} variant="destructive">
           Delete
           <Trash />
         </Button>
@@ -33,11 +57,14 @@ function AlertDialogDeletePhoto() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <Button disabled={isPending} onClick={deletePhoto}>
+            {isPending && <Loader className="animate-spin" />}
+            Continue
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }
 
-export default AlertDialogDeletePhoto;
+export default AlertDialogDeletePhoto

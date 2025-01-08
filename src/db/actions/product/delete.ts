@@ -26,3 +26,27 @@ export const removeProduct = async (id: string) => {
     return 'Product delete'
   }
 }
+
+export const removeProductPhoto = async (
+  productId: string,
+  filePath: string,
+) => {
+  const supabase = await Supabase.initServerClient()
+  const { error: ppErr } = await supabase
+    .from('product_photos')
+    .delete()
+    .eq('product_id', productId)
+    .eq('url', filePath)
+  if (ppErr) {
+    console.log(ppErr)
+    return false
+  }
+  const { error } = await supabase.storage.from('products').remove([filePath])
+  if (error) {
+    console.log(error)
+    return false
+  }
+  revalidateTag(CACHE_KEY_PRODUCTS)
+  revalidateTag(CACHE_KEY_PRODUCT)
+  return true
+}

@@ -185,7 +185,6 @@ export default function FormCreateProduct() {
                 setFiles(f as File[])
               }}
               type="file"
-              name="photos"
               multiple
               accept="image/*"
             />
