@@ -1,11 +1,15 @@
 import { Database } from '../../../database.types'
 
+type TransactionItem = {
+  product: TransactionProduct
+  total_items: number
+}
+
 type TransactionProduct = {
   id: string
   name: string
   price: number
-  photos_url: string[]
-  total_items: number
+  photos: string[]
 }
 
 export type Transaction = {
@@ -14,7 +18,7 @@ export type Transaction = {
   status: Database['public']['Enums']['order_status']
   created_at: Date
   invoice: string
-  items: TransactionProduct[]
+  items: TransactionItem[]
 }
 
 export type TransactionStatus = Database['public']['Enums']['order_status']

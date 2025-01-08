@@ -22,17 +22,17 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useTheme } from 'next-themes'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { logout } from '@/db/actions/auth/logout'
+import { useTheme } from 'next-themes'
 import { useRouter } from 'nextjs-toploader/app'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { AuthUser } from '@/lib/definitions/auth'
 
 type Props = {
-  name: string
-  avatar: string | null
+  user: AuthUser
 }
 
-export default function User({ avatar, name }: Props) {
+export default function DropDownUser({ user }: Props) {
   const { setTheme, theme } = useTheme()
   const router = useRouter()
   return (
@@ -41,10 +41,10 @@ export default function User({ avatar, name }: Props) {
         <Avatar>
           <AvatarImage
             className="object-cover"
-            src={avatar ?? ''}
+            src={user.avatar ?? ''}
             alt="avatar"
           />
-          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+          <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -75,11 +75,15 @@ export default function User({ avatar, name }: Props) {
             </DropdownMenuPortal>
           </DropdownMenuSub>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => router.push('/admin')}>
-          <UserCheck />
-          <span>Admin</span>
-        </DropdownMenuItem>
+        {user.role === 'admin' && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push('/admin')}>
+              <UserCheck />
+              <span>Admin</span>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => router.push('/transactions')}>
           <CircleDollarSign />

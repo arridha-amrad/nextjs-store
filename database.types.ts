@@ -143,7 +143,7 @@ export type Database = {
             foreignKeyName: "orders_items_order_id_fkey"
             columns: ["transaction_id"]
             isOneToOne: false
-            referencedRelation: "transaction_details"
+            referencedRelation: "customer_transactions"
             referencedColumns: ["id"]
           },
           {
@@ -270,7 +270,7 @@ export type Database = {
           confirmed_by: string | null
           created_at: string
           id: string
-          invoice: string | null
+          invoice: string
           shipping_at: string | null
           status: Database["public"]["Enums"]["order_status"]
           user_id: string | null
@@ -282,7 +282,7 @@ export type Database = {
           confirmed_by?: string | null
           created_at?: string
           id?: string
-          invoice?: string | null
+          invoice: string
           shipping_at?: string | null
           status: Database["public"]["Enums"]["order_status"]
           user_id?: string | null
@@ -294,7 +294,7 @@ export type Database = {
           confirmed_by?: string | null
           created_at?: string
           id?: string
-          invoice?: string | null
+          invoice?: string
           shipping_at?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           user_id?: string | null
@@ -304,7 +304,7 @@ export type Database = {
       }
     }
     Views: {
-      transaction_details: {
+      customer_transactions: {
         Row: {
           created_at: string | null
           id: string | null

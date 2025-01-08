@@ -85,7 +85,15 @@ export default function FormCreateProduct() {
 
   return (
     <fieldset disabled={pending}>
-      <form action={action} className="grid grid-cols-2 gap-y-5 gap-x-10">
+      <form
+        action={(formdata) => {
+          for (const file of files) {
+            formdata.append('photos', file)
+          }
+          action(formdata)
+        }}
+        className="grid grid-cols-2 gap-y-5 gap-x-10"
+      >
         <div className="space-y-3 col-span-2">
           <Label htmlFor="productName">Product&apos;s Name</Label>
           <Input

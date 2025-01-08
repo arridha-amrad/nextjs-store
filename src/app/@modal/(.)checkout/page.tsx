@@ -9,8 +9,10 @@ import { cookies } from 'next/headers'
 
 export default async function Page() {
   const cookie = await cookies()
-  const result = await getCartsFromCache(cookie)
-  const totalPrice = await getCartTotalPriceFromCache(cookie)
+  const [result, totalPrice] = await Promise.all([
+    getCartsFromCache(cookie),
+    getCartTotalPriceFromCache(cookie),
+  ])
   return (
     <ContextCartProvider>
       <Cart data={result}>

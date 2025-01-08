@@ -1,16 +1,17 @@
-'use server';
+'use server'
 
-import { Supabase } from '@/lib/supabase/Supabase';
+import { baseUrl } from '@/config'
+import { Supabase } from '@/lib/supabase/Supabase'
 
 export const loginWithGoogle = async () => {
-  console.log('test');
+  console.log('test')
 
-  const supabase = await Supabase.initServerClient();
+  const supabase = await Supabase.initServerClient()
 
   await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: 'http://localhost:3000/auth/callback',
+      redirectTo: `${baseUrl}/auth/callback`,
     },
-  });
-};
+  })
+}

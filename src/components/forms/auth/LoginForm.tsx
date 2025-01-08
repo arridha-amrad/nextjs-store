@@ -1,49 +1,49 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ChangeEventHandler, useActionState, useState } from 'react';
-import { Loader2 } from 'lucide-react';
-import Link from 'next/link';
-import { login } from '@/db/actions/auth/login';
-import { createClient } from '@/lib/supabase/client';
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { ChangeEventHandler, useActionState, useState } from 'react'
+import { Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { login } from '@/db/actions/auth/login'
+import { createClient } from '@/lib/supabase/client'
 
 export default function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
-  const [state, action, pending] = useActionState(login, undefined);
+  const [state, action, pending] = useActionState(login, undefined)
 
   const [formState, setFormState] = useState({
     email: '',
     password: '',
-  });
+  })
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setFormState({
       ...formState,
       [e.target.name]: e.target.value,
-    });
-  };
+    })
+  }
 
   const loginWithGoogle = async () => {
-    const sb = createClient();
+    const sb = createClient()
     await sb.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: 'http://localhost:3000/auth/callback',
       },
-    });
-  };
+    })
+  }
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -114,5 +114,5 @@ export default function LoginForm({
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

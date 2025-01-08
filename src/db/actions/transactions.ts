@@ -4,9 +4,13 @@ import {
   CACHE_KEY_CARTS,
   CACHE_KEY_CARTS_COUNTER,
   CACHE_KEY_CARTS_TOTAL_PRICE,
+  CACHE_KEY_CUSTOMER_TRANSACTIONS,
   CACHE_KEY_PRODUCTS_ON_SALES,
+<<<<<<< HEAD
   CACHE_KEY_TRANSACTIONS,
   CACHE_KEY_TRANSACTIONS_ADMIN,
+=======
+>>>>>>> test2
 } from '@/cacheKey'
 import { TransactionStatus } from '@/lib/definitions/transaction'
 import { Supabase } from '@/lib/supabase/Supabase'
@@ -21,7 +25,7 @@ export const create = async () => {
   } = await sb.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    return redirect('/login')
   }
 
   // 1. get items from carts
@@ -46,7 +50,7 @@ export const create = async () => {
   if (!carts) return
 
   // 2. create new order
-  const { error: errNewOrder, data } = await sb
+  const { data: newTransaction, error: errNewOrder } = await sb
     .from('transactions')
     .insert({
       status: 'on progress',
@@ -62,7 +66,7 @@ export const create = async () => {
     carts.map((v) => ({
       product_id: v.product_id,
       total_items: v.total,
-      transaction_id: data?.id ?? '',
+      transaction_id: newTransaction?.id ?? '',
       user_id: user.id,
     })),
   )
@@ -84,36 +88,18 @@ export const create = async () => {
     .update({
       value: orderValue,
     })
-    .eq('id', data?.id ?? '')
+    .eq('id', newTransaction?.id ?? '')
 
   if (errNewOrder) {
     console.log(errNewOrder)
     return errNewOrder.message
   }
 
-  // 6. delete ordered items from carts
-  await sb.from('carts').delete().eq('is_select', true).eq('user_id', user.id)
-
-  // 7. subtract product stock
-  for (const p of carts) {
-    const { data } = await sb
-      .from('products')
-      .select('*')
-      .eq('id', p.product_id)
-      .single()
-    if (data) {
-      await sb
-        .from('products')
-        .update({ stock: data.stock - p.total })
-        .eq('id', p.product_id)
-    }
-  }
-
-  revalidateTag(CACHE_KEY_TRANSACTIONS)
   revalidateTag(CACHE_KEY_CARTS)
   revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
   revalidateTag(CACHE_KEY_PRODUCTS_ON_SALES)
   revalidateTag(CACHE_KEY_CARTS_COUNTER)
+  revalidateTag(CACHE_KEY_CUSTOMER_TRANSACTIONS)
 
   return 'Your request order has been placed successfully'
 }
