@@ -31,9 +31,11 @@ export const getUser = unstable_cache(
       console.log({ errac })
     }
 
+    if (!ac) return null
+
     return {
       ...data,
-      role: ac?.roles.title,
+      role: ac.roles.title,
     }
   },
   [CACHE_KEY_USER],

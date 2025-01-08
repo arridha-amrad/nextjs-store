@@ -3,21 +3,17 @@
 import { cn } from '@/lib/utils'
 import { Search } from 'lucide-react'
 import { useInView } from 'react-intersection-observer'
-import User from './dropdowns/User'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Separator } from './ui/separator'
 import { ReactNode } from 'react'
 import { useRouter } from 'nextjs-toploader/app'
 import Link from 'next/link'
-
-type User = {
-  avatar: string | null
-  name: string
-}
+import DropDownUser from './dropdowns/User'
+import { AuthUser } from '@/lib/definitions/auth'
 
 type Props = {
-  user: User | null
+  user: AuthUser | null
   children: ReactNode
 }
 
@@ -58,7 +54,7 @@ function AppHeader({ user, children }: Props) {
         <Separator className="h-[25px]" orientation="vertical" />
         {user ? (
           <div className="relative">
-            <User avatar={user?.avatar ?? ''} name={user?.name ?? ''} />
+            <DropDownUser user={user} />
           </div>
         ) : (
           <div className="flex items-center">

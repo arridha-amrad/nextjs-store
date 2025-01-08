@@ -11,6 +11,7 @@ async function Layout({ children }: { children: ReactNode }) {
     getUser(cookie),
     getCountItemsFromCache(cookie),
   ])
+
   return (
     <div className="pb-20">
       <AppHeader user={user}>

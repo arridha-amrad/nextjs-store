@@ -1,30 +1,23 @@
 import { supabaseStorageBaseUrl } from '@/config'
-import { Transaction } from '@/lib/definitions/transaction'
-import { Supabase } from '@/lib/supabase/Supabase'
+import { getCustomerTransactions } from '@/db/queries/transactions'
 import { dateFormatter, rupiahFormatter } from '@/lib/utils'
+import { cookies } from 'next/headers'
 import Image from 'next/image'
 
 export default async function Page() {
-  const supabase = await Supabase.initServerClient()
-  const { data, error } = await supabase
-    .from('transaction_details')
-    .select()
-    .returns<Transaction[]>()
-
-  if (error) {
-    console.log(error)
-  }
+  const cookie = await cookies()
+  const transactions = await getCustomerTransactions(cookie)
   return (
     <div className="max-w-[1024px] mx-auto">
       <div className="mb-5">
         <h1 className="font-bold text-2xl tracking-tight">Transaction List</h1>
       </div>
       <div className="">
-        {!data ? (
+        {!transactions ? (
           <p>No transaction</p>
         ) : (
           <div className="space-y-4">
-            {data.map((t) => (
+            {transactions.map((t) => (
               <div className="border rounded-lg p-4" key={t.id}>
                 <div className="text-sm flex items-center gap-4">
                   <h1 className="font-bold">Shop</h1>
@@ -36,25 +29,25 @@ export default async function Page() {
                 </div>
                 <div className="flex items-center">
                   <div className="space-y-2 py-4 flex-1 border-r">
-                    {t.items.map((product) => (
-                      <div className="flex">
+                    {t.items.map(({ product, total_items }) => (
+                      <div key={product.id} className="flex">
                         <div
                           className="flex flex-1 gap-4 items-start"
                           key={product.id}
                         >
                           <Image
-                            className="rounded"
+                            className="rounded aspect-square object-cover"
                             width={100}
                             height={100}
                             alt="photo product"
-                            src={`${supabaseStorageBaseUrl}/${product.photos_url[0]}`}
+                            src={`${supabaseStorageBaseUrl}/${product.photos[0]}`}
                           />
                           <div className="py-2 flex flex-col">
                             <h1 className="font-bold text-sm leading-relaxed">
                               {product.name}
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                              <span>{product.total_items} item</span>
+                              <span>{total_items} item</span>
                               <span className="px-1">x</span>
                               <span>
                                 {rupiahFormatter.format(product.price)}

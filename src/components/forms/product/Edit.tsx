@@ -1,82 +1,80 @@
-'use client';
+'use client'
 
-import DeletePhoto from '@/components/alertDialog/DeletePhoto';
-import AddStock from '@/components/dialog/AddStock';
-import MyTooltip from '@/components/MyTooltip';
-import SelectCategories from '@/components/SelectCategories';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { editProductAction } from '@/db/actions/product/edit';
-import { useToast } from '@/hooks/use-toast';
-import { TEditProduct } from '@/lib/definitions/product';
-import { DollarSignIcon, Loader, PlusIcon } from 'lucide-react';
-import Image from 'next/image';
-import { useActionState, useEffect, useRef, useState } from 'react';
+import DeletePhoto from '@/components/alertDialog/DeletePhoto'
+import AddStock from '@/components/dialog/AddStock'
+import MyTooltip from '@/components/MyTooltip'
+import SelectCategories from '@/components/SelectCategories'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { supabaseStorageBaseUrl } from '@/config'
+import { editProductAction } from '@/db/actions/product/edit'
+import { useToast } from '@/hooks/use-toast'
+import { TEditProduct } from '@/lib/definitions/product'
+import { DollarSignIcon, Loader, PlusIcon } from 'lucide-react'
+import Image from 'next/image'
+import { useActionState, useEffect, useRef, useState } from 'react'
 
 type Props = {
-  props: TEditProduct;
-};
+  props: TEditProduct
+}
 
 export default function FormEditProduct({ props }: Props) {
-  const { categories, description, name, photos, price, stock, id } = props;
-  const [newStockValue, setNewStockValue] = useState(stock);
-  const { toast } = useToast();
+  const { categories, description, name, photos, price, stock, id } = props
+  const [newStockValue, setNewStockValue] = useState(stock)
+  const { toast } = useToast()
 
-  const hiddenInputRef = useRef<HTMLInputElement | null>(null);
+  const hiddenInputRef = useRef<HTMLInputElement | null>(null)
 
-  const [file, setFile] = useState<File | null>(null);
-  const [previews, setPreviews] = useState<string[]>([]);
-  const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
+  const [file, setFile] = useState<File | null>(null)
+  const [previews, setPreviews] = useState<string[]>([])
+  const [filesToUpload, setFilesToUpload] = useState<File[]>([])
 
   const [state, action, isPending] = useActionState(
     editProductAction,
     undefined,
-  );
-
-  const IMAGE_BASE_URL =
-    'https://fzsbsdqssixryyzeanoc.supabase.co/storage/v1/object/public/products';
+  )
 
   useEffect(() => {
     if (file) {
-      const url = URL.createObjectURL(file);
-      console.log(url);
-      setPreviews([...previews, url]);
-      setFilesToUpload([...filesToUpload, file]);
+      const url = URL.createObjectURL(file)
+      console.log(url)
+      setPreviews([...previews, url])
+      setFilesToUpload([...filesToUpload, file])
     }
     // eslint-disable-next-line
-  }, [file]);
+  }, [file])
 
   useEffect(() => {
     if (state?.message) {
       toast({
         description: state.message,
-      });
-      setPreviews([]);
-      setFilesToUpload([]);
+      })
+      setPreviews([])
+      setFilesToUpload([])
     }
     // eslint-disable-next-line
-  }, [state?.message]);
+  }, [state?.message])
 
   useEffect(() => {
     if (state?.error) {
       toast({
         description: state.error,
         variant: 'destructive',
-      });
+      })
     }
     // eslint-disable-next-line
-  }, [state?.error]);
+  }, [state?.error])
 
   return (
     <fieldset disabled={isPending}>
       <form
         action={(data) => {
           for (const file of filesToUpload) {
-            data.append('photos', file);
+            data.append('photos', file)
           }
-          action(data);
+          action(data)
         }}
         className="grid grid-cols-2 gap-y-5 gap-x-10"
       >
@@ -166,7 +164,7 @@ export default function FormEditProduct({ props }: Props) {
                 className="w-full h-auto object-fill object-center"
                 width={500}
                 height={500}
-                src={`${IMAGE_BASE_URL}/${v}`}
+                src={`${supabaseStorageBaseUrl}/${v}`}
                 alt="product_photo"
               />
               <div className="absolute opacity-0 group-hover:opacity-100 top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 duration-100 ease-linear transition-opacity">
@@ -198,7 +196,7 @@ export default function FormEditProduct({ props }: Props) {
             <MyTooltip content="Add More Photo">
               <div
                 onClick={() => {
-                  hiddenInputRef.current?.click();
+                  hiddenInputRef.current?.click()
                 }}
                 className="rounded-full cursor-pointer border flex items-center justify-center w-14 aspect-square"
               >
@@ -208,10 +206,10 @@ export default function FormEditProduct({ props }: Props) {
                   hidden
                   accept="image/*"
                   onChange={(e) => {
-                    const newFiles = e.target.files;
+                    const newFiles = e.target.files
                     if (newFiles) {
-                      console.log(newFiles);
-                      setFile(newFiles[0]);
+                      console.log(newFiles)
+                      setFile(newFiles[0])
                     }
                   }}
                 />
@@ -233,5 +231,5 @@ export default function FormEditProduct({ props }: Props) {
         </div>
       </form>
     </fieldset>
-  );
+  )
 }

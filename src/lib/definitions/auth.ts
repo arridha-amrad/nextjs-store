@@ -1,12 +1,13 @@
-import { z } from "zod";
+import { getUser } from '@/db/queries/users'
+import { z } from 'zod'
 
 export const SignupFormSchema = z.object({
   name: z
     .string()
-    .min(2, { message: "Name must be at least 2 characters long." })
+    .min(2, { message: 'Name must be at least 2 characters long.' })
     .trim(),
-  email: z.string().email({ message: "Please enter a valid email." }).trim(),
-  password: z.string().min(1, { message: "Password is required" }),
+  email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
+  password: z.string().min(1, { message: 'Password is required' }),
   // password: z
   //   .string()
   //   .min(8, { message: "Be at least 8 characters long" })
@@ -16,9 +17,11 @@ export const SignupFormSchema = z.object({
   //     message: "Contain at least one special character.",
   //   })
   //   .trim(),
-});
+})
 
 export const LoginFormSchema = z.object({
-  email: z.string().min(1, { message: "Email is required" }).trim(),
-  password: z.string().min(1, { message: "Password is required" }),
-});
+  email: z.string().min(1, { message: 'Email is required' }).trim(),
+  password: z.string().min(1, { message: 'Password is required' }),
+})
+
+export type AuthUser = NonNullable<Awaited<ReturnType<typeof getUser>>>
