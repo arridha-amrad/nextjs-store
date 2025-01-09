@@ -8,7 +8,7 @@ import { getAuthUserAndClient } from '@/lib/utils'
 import { unstable_cache } from 'next/cache'
 import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 
-export const getCountItemsFromCache = unstable_cache(
+export const countCartsItems = unstable_cache(
   async (cookie: ReadonlyRequestCookies) => {
     const { supabase, user } = await getAuthUserAndClient(cookie)
     const { count } = await supabase
@@ -21,7 +21,7 @@ export const getCountItemsFromCache = unstable_cache(
   { tags: [CACHE_KEY_CARTS_COUNTER] },
 )
 
-export const getCartsFromCache = unstable_cache(
+export const getUserCart = unstable_cache(
   async (cookie: ReadonlyRequestCookies) => {
     const sb = createClient(cookie)
     const { data } = await sb.auth.getUser()
@@ -49,7 +49,7 @@ export const getCartsFromCache = unstable_cache(
   },
 )
 
-export type TCarts = Awaited<ReturnType<typeof getCartsFromCache>>
+export type TCarts = Awaited<ReturnType<typeof getUserCart>>
 
 export const calculateCartTotalPrice = async (
   cookie: ReadonlyRequestCookies,

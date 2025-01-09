@@ -19,7 +19,7 @@ export function escapeHtml(text: string) {
   }
 
   return text.replace(/[&<>"']/g, (text) => {
-    // @ts-ignore
+    // @ts-expect-error: Should be fine
     return map[text]
   })
 }

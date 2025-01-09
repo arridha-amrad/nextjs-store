@@ -3,7 +3,7 @@
 import { SignupFormSchema } from '@/lib/definitions/auth'
 import { Supabase } from '@/lib/supabase/Supabase'
 
-export async function signup(_: any, formData: FormData) {
+export async function signup(_: unknown, formData: FormData) {
   const email = formData.get('email') as string
   const password = formData.get('password') as string
   const name = formData.get('name') as string

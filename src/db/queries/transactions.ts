@@ -38,7 +38,7 @@ export const getTransactionForAdmin = unstable_cache(
     const currPage = filter?.page ?? 1
     const postPerPage = 5
 
-    let query = supabase
+    const query = supabase
       .from('transactions')
       .select('value, status, invoice, created_at', {
         count: 'exact',

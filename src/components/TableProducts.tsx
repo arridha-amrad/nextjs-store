@@ -22,7 +22,7 @@ async function TableProducts() {
       <TableHeader>
         <TableRow>
           <TableHead className="min-w-fit">No.</TableHead>
-          <TableHead className="">Product's Name</TableHead>
+          <TableHead className="">Product&apos;s Name</TableHead>
           <TableHead>Stock</TableHead>
           <TableHead>Price</TableHead>
           <TableHead className="text-right">Actions</TableHead>

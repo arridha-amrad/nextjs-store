@@ -14,6 +14,7 @@ type Props = {
 function CartItemCheckbox({ isSelect, id }: Props) {
   const [isChecked, setChecked] = useState(isSelect)
   const [value, { isPending }] = useDebounce(isChecked, 500)
+  const pending = isPending()
 
   const { setLoading } = useShopCart()
 
@@ -21,13 +22,13 @@ function CartItemCheckbox({ isSelect, id }: Props) {
     update(id, { is_select: value }).then(() => {
       setLoading(false)
     })
-  }, [value])
+  }, [value, id, setLoading])
 
   useEffect(() => {
-    if (isPending()) {
+    if (pending) {
       setLoading(true)
     }
-  }, [isPending()])
+  }, [pending, setLoading])
 
   return (
     <Checkbox

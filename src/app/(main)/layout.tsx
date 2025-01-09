@@ -7,6 +7,7 @@ import { ReactNode } from 'react'
 
 async function Layout({ children }: { children: ReactNode }) {
   const cookie = await cookies()
+
   const [user, count] = await Promise.all([
     getUser(cookie),
     getCountItemsFromCache(cookie),

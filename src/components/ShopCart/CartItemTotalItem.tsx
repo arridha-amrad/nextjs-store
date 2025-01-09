@@ -13,6 +13,7 @@ type Props = {
 function CartItemTotalItem({ totalItem, id }: Props) {
   const [total, setTotal] = useState(totalItem)
   const [value, { isPending }] = useDebounce(total, 1000)
+  const pending = isPending()
 
   const { setLoading } = useShopCart()
 
@@ -20,13 +21,13 @@ function CartItemTotalItem({ totalItem, id }: Props) {
     update(id, { total: value }).then(() => {
       setLoading(false)
     })
-  }, [value])
+  }, [value, id, setLoading])
 
   useEffect(() => {
-    if (isPending()) {
+    if (pending) {
       setLoading(true)
     }
-  }, [isPending()])
+  }, [pending, setLoading])
 
   return (
     <div className="space-y-2">

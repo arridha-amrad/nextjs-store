@@ -48,6 +48,7 @@ export default function RegisterForm({
         password: '',
       })
     }
+    // eslint-disable-next-line
   }, [state?.message])
 
   return (
@@ -65,7 +66,7 @@ export default function RegisterForm({
             </p>
           ) : (
             <CardDescription>
-              Let's start creating a new account
+              Let&apos;s start creating a new account
             </CardDescription>
           )}
         </CardHeader>

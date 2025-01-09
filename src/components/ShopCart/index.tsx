@@ -9,7 +9,6 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet'
 import { TCarts } from '@/db/queries/carts'
-import { ShoppingCart } from 'lucide-react'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
 import CartItem from './CartItem'
@@ -29,6 +28,7 @@ export default function Cart({ data, children }: Props) {
     if (pathname === '/checkout' && !open) {
       router.back()
     }
+    // eslint-disable-next-line
   }, [open, pathname])
 
   return (

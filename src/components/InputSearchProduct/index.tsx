@@ -1,13 +1,13 @@
 'use client'
 
+import { X } from 'lucide-react'
 import Form from 'next/form'
 import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
+import { useState } from 'react'
+import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import ButtonSubmit from './ButtonSubmit'
-import { Button } from '../ui/button'
-import { X } from 'lucide-react'
-import { useRef, useState } from 'react'
-import { useRouter } from 'nextjs-toploader/app'
 
 function InputSearchProduct() {
   const searchParams = useSearchParams()

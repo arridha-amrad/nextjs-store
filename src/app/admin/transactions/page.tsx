@@ -9,14 +9,14 @@ import StatusFilter from './StatusFilter'
 import TransactionsTable from './TransactionsTable'
 
 type Props = {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<TransactionAdminFilter>
 }
 
 export default async function Transaction({ searchParams }: Props) {
   const cookie = await cookies()
 
-  const { page, invoice, status } =
-    (await searchParams) as TransactionAdminFilter
+  const params = await searchParams
+  const { invoice, page, status } = params
 
   const transactions = await getTransactionForAdmin(cookie, {
     invoice,

@@ -1,9 +1,8 @@
 'use client'
 
 import { Loader, Search } from 'lucide-react'
-import { Button } from '../ui/button'
 import { useFormStatus } from 'react-dom'
-import { Ref } from 'react'
+import { Button } from '../ui/button'
 
 function ButtonSubmit() {
   const status = useFormStatus()
