@@ -3,9 +3,9 @@
 import {
   CACHE_KEY_CARTS,
   CACHE_KEY_CARTS_COUNTER,
-  CACHE_KEY_CARTS_TOTAL_PRICE,
+  CACHE_KEY_CARTS_AMOUNT,
   CACHE_KEY_CUSTOMER_TRANSACTIONS,
-  CACHE_KEY_PRODUCTS_ON_SALES,
+  CACHE_KEY_PRODUCTS_ON_CUSTOMER,
   CACHE_KEY_TRANSACTIONS_ADMIN,
 } from '@/cacheKey'
 import { TransactionStatus } from '@/lib/definitions/transaction'
@@ -92,8 +92,8 @@ export const create = async () => {
   }
 
   revalidateTag(CACHE_KEY_CARTS)
-  revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
-  revalidateTag(CACHE_KEY_PRODUCTS_ON_SALES)
+  revalidateTag(CACHE_KEY_CARTS_AMOUNT)
+  revalidateTag(CACHE_KEY_PRODUCTS_ON_CUSTOMER)
   revalidateTag(CACHE_KEY_CARTS_COUNTER)
   revalidateTag(CACHE_KEY_CUSTOMER_TRANSACTIONS)
 

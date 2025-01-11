@@ -1,6 +1,6 @@
 'use server'
 
-import { CACHE_KEY_PRODUCTS } from '@/cacheKey'
+import { CACHE_KEY_PRODUCTS_ON_ADMIN } from '@/cacheKey'
 import { createProductSchema } from '@/lib/definitions/product'
 import { Supabase } from '@/lib/supabase/Supabase'
 import { revalidateTag } from 'next/cache'
@@ -115,7 +115,7 @@ export const createProduct = async (_: unknown, formData: FormData) => {
     })),
   )
 
-  revalidateTag(CACHE_KEY_PRODUCTS)
+  revalidateTag(CACHE_KEY_PRODUCTS_ON_ADMIN)
 
   return {
     message: 'New product added successfully',

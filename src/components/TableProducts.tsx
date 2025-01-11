@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { getCachedProducts } from '@/db/queries/product'
+import { getProductsForAdmin } from '@/db/queries/product'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import AlertDialogDeleteProduct from './alertDialog/DeleteProduct'
@@ -15,7 +15,7 @@ import { rupiahFormatter } from '@/lib/utils'
 
 async function TableProducts() {
   const cookie = await cookies()
-  const products = await getCachedProducts(cookie)
+  const products = await getProductsForAdmin(cookie)
   return (
     <Table>
       <TableCaption>A list of your ready stock products.</TableCaption>

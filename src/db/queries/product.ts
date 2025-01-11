@@ -1,7 +1,7 @@
 import {
-  CACHE_KEY_PRODUCT,
-  CACHE_KEY_PRODUCTS,
-  CACHE_KEY_PRODUCTS_ON_SALES,
+  CACHE_KEY_PRODUCT_ON_ADMIN,
+  CACHE_KEY_PRODUCTS_ON_ADMIN,
+  CACHE_KEY_PRODUCTS_ON_CUSTOMER,
 } from '@/cacheKey'
 import { createClient } from '@/lib/supabase/server'
 import { unstable_cache } from 'next/cache'
@@ -28,9 +28,13 @@ export const getProductsForCustomer = unstable_cache(
     }
     return data ?? []
   },
-  [CACHE_KEY_PRODUCTS_ON_SALES],
-  { tags: [CACHE_KEY_PRODUCTS_ON_SALES] },
+  [CACHE_KEY_PRODUCTS_ON_CUSTOMER],
+  { tags: [CACHE_KEY_PRODUCTS_ON_CUSTOMER] },
 )
+
+export type ProductsOnSales = Awaited<
+  ReturnType<typeof getProductsForCustomer>
+>[number]
 
 // for admin
 export const getProductsForAdmin = unstable_cache(
@@ -39,9 +43,9 @@ export const getProductsForAdmin = unstable_cache(
     const { data } = await supabase.from('products').select('*')
     return data
   },
-  [CACHE_KEY_PRODUCTS],
+  [CACHE_KEY_PRODUCTS_ON_ADMIN],
   {
-    tags: [CACHE_KEY_PRODUCTS],
+    tags: [CACHE_KEY_PRODUCTS_ON_ADMIN],
   },
 )
 
@@ -67,8 +71,8 @@ export const getProductForAdmin = unstable_cache(
 
     return data
   },
-  [CACHE_KEY_PRODUCT],
+  [CACHE_KEY_PRODUCT_ON_ADMIN],
   {
-    tags: [CACHE_KEY_PRODUCT],
+    tags: [CACHE_KEY_PRODUCT_ON_ADMIN],
   },
 )

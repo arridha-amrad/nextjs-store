@@ -1,6 +1,9 @@
 'use server'
 
-import { CACHE_KEY_PRODUCT, CACHE_KEY_PRODUCTS } from '@/cacheKey'
+import {
+  CACHE_KEY_PRODUCT_ON_ADMIN,
+  CACHE_KEY_PRODUCTS_ON_ADMIN,
+} from '@/cacheKey'
 import { Supabase } from '@/lib/supabase/Supabase'
 import { revalidateTag } from 'next/cache'
 
@@ -21,8 +24,8 @@ export const removeProduct = async (id: string) => {
     const { error } = await supabase.from('products').delete().eq('id', id)
     if (error) return error.message
 
-    revalidateTag(CACHE_KEY_PRODUCTS)
-    revalidateTag(CACHE_KEY_PRODUCT)
+    revalidateTag(CACHE_KEY_PRODUCTS_ON_ADMIN)
+    revalidateTag(CACHE_KEY_PRODUCT_ON_ADMIN)
     return 'Product delete'
   }
 }
@@ -46,7 +49,7 @@ export const removeProductPhoto = async (
     console.log(error)
     return false
   }
-  revalidateTag(CACHE_KEY_PRODUCTS)
-  revalidateTag(CACHE_KEY_PRODUCT)
+  revalidateTag(CACHE_KEY_PRODUCTS_ON_ADMIN)
+  revalidateTag(CACHE_KEY_PRODUCT_ON_ADMIN)
   return true
 }

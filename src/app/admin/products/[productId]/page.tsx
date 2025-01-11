@@ -1,12 +1,12 @@
 import FormEditProduct from '@/components/forms/product/Edit'
-import { getProductCache } from '@/db/queries/product'
+import { getProductForAdmin } from '@/db/queries/product'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 async function Page({ params }: { params: Promise<{ productId: string }> }) {
   const cookie = await cookies()
   const productId = (await params).productId
-  const product = await getProductCache(productId, cookie)
+  const product = await getProductForAdmin(productId, cookie)
 
   if (product === null) redirect('/products')
   const {

@@ -1,4 +1,3 @@
-import { getProductsOnSales } from '@/db/queries/product'
 import { z } from 'zod'
 
 export const createProductSchema = z.object({
@@ -15,7 +14,3 @@ export type TEditProduct = z.infer<typeof createProductSchema> & {
   photos: string[]
   id: string
 }
-
-export type ProductsOnSales = Awaited<
-  ReturnType<typeof getProductsOnSales>
->[number]

@@ -3,7 +3,7 @@
 import {
   CACHE_KEY_CARTS,
   CACHE_KEY_CARTS_COUNTER,
-  CACHE_KEY_CARTS_TOTAL_PRICE,
+  CACHE_KEY_CARTS_AMOUNT,
 } from '@/cacheKey'
 import { Supabase } from '@/lib/supabase/Supabase'
 import { revalidateTag } from 'next/cache'
@@ -57,7 +57,7 @@ export const create = async (productId: string) => {
   }
 
   revalidateTag(CACHE_KEY_CARTS)
-  revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
+  revalidateTag(CACHE_KEY_CARTS_AMOUNT)
   revalidateTag(CACHE_KEY_CARTS_COUNTER)
 
   return message
@@ -70,7 +70,7 @@ export const destroy = async (cartId: number) => {
     console.log(error)
   }
   revalidateTag(CACHE_KEY_CARTS)
-  revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
+  revalidateTag(CACHE_KEY_CARTS_AMOUNT)
   revalidateTag(CACHE_KEY_CARTS_COUNTER)
 }
 
@@ -82,5 +82,5 @@ export const update = async (cartId: number, data: UpdateProps) => {
     console.log(error)
   }
   revalidateTag(CACHE_KEY_CARTS)
-  revalidateTag(CACHE_KEY_CARTS_TOTAL_PRICE)
+  revalidateTag(CACHE_KEY_CARTS_AMOUNT)
 }

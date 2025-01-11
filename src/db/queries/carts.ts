@@ -1,14 +1,14 @@
 import {
   CACHE_KEY_CARTS,
   CACHE_KEY_CARTS_COUNTER,
-  CACHE_KEY_CARTS_TOTAL_PRICE,
+  CACHE_KEY_CARTS_AMOUNT,
 } from '@/cacheKey'
 import { createClient } from '@/lib/supabase/server'
 import { getAuthUserAndClient } from '@/lib/utils'
 import { unstable_cache } from 'next/cache'
 import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 
-export const countCartsItems = unstable_cache(
+export const countCart = unstable_cache(
   async (cookie: ReadonlyRequestCookies) => {
     const { supabase, user } = await getAuthUserAndClient(cookie)
     const { count } = await supabase
@@ -21,7 +21,7 @@ export const countCartsItems = unstable_cache(
   { tags: [CACHE_KEY_CARTS_COUNTER] },
 )
 
-export const getUserCart = unstable_cache(
+export const getCart = unstable_cache(
   async (cookie: ReadonlyRequestCookies) => {
     const sb = createClient(cookie)
     const { data } = await sb.auth.getUser()
@@ -49,44 +49,40 @@ export const getUserCart = unstable_cache(
   },
 )
 
-export type TCarts = Awaited<ReturnType<typeof getUserCart>>
+export type TCarts = Awaited<ReturnType<typeof getCart>>
 
-export const calculateCartTotalPrice = async (
-  cookie: ReadonlyRequestCookies,
-) => {
-  const sb = createClient(cookie)
-  const { data } = await sb.auth.getUser()
+export const getCartsAmount = unstable_cache(
+  async (cookie: ReadonlyRequestCookies) => {
+    const sb = createClient(cookie)
+    const { data } = await sb.auth.getUser()
 
-  const { data: carts, error } = await sb
-    .from('carts')
-    .select(
-      `*,
-      products(
-        price
+    const { data: carts, error } = await sb
+      .from('carts')
+      .select(
+        `*,
+        products(
+          price
+        )
+        `,
       )
-      `,
-    )
-    .eq('user_id', data.user?.id ?? '')
-    .eq('is_select', true)
+      .eq('user_id', data.user?.id ?? '')
+      .eq('is_select', true)
 
-  if (error) {
-    console.log(error)
-  }
-
-  let total = 0
-  if (carts) {
-    for (const c of carts) {
-      const totalPrice = c.total * c.products.price
-      total += totalPrice
+    if (error) {
+      console.log(error)
     }
-  }
-  return total
-}
 
-export const getCartTotalPriceFromCache = unstable_cache(
-  calculateCartTotalPrice,
-  [CACHE_KEY_CARTS_TOTAL_PRICE],
+    let total = 0
+    if (carts) {
+      for (const c of carts) {
+        const totalPrice = c.total * c.products.price
+        total += totalPrice
+      }
+    }
+    return total
+  },
+  [CACHE_KEY_CARTS_AMOUNT],
   {
-    tags: [CACHE_KEY_CARTS_TOTAL_PRICE],
+    tags: [CACHE_KEY_CARTS_AMOUNT],
   },
 )
