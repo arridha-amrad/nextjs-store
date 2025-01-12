@@ -11,23 +11,38 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { signup } from '@/db/actions/auth/signup'
+import { registerUser } from '@/db/actions/auth/signup'
 import { cn } from '@/lib/utils'
 import { EyeIcon, EyeOff, Loader2 } from 'lucide-react'
+import { useAction } from 'next-safe-action/hooks'
 import Link from 'next/link'
-import { ChangeEventHandler, useActionState, useEffect, useState } from 'react'
+import { ChangeEventHandler, useState } from 'react'
 
 export default function RegisterForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) {
-  const [state, action, pending] = useActionState(signup, undefined)
-
   const [formState, setFormState] = useState({
     email: '',
     name: '',
     password: '',
   })
+
+  const { execute, isPending, result } = useAction(registerUser, {
+    onSuccess() {
+      setFormState({
+        email: '',
+        name: '',
+        password: '',
+      })
+    },
+  })
+
+  const emailError = result.validationErrors?.email?._errors
+  const nameError = result.validationErrors?.name?._errors
+  const passwordError = result.validationErrors?.password?._errors
+  const actionError = result.serverError
+  const actionResult = result.data?.message
 
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [isAcceptTerms, setAcceptTerms] = useState(false)
@@ -39,30 +54,18 @@ export default function RegisterForm({
     })
   }
 
-  useEffect(() => {
-    if (state?.message) {
-      setFormState({
-        ...formState,
-        email: '',
-        name: '',
-        password: '',
-      })
-    }
-    // eslint-disable-next-line
-  }, [state?.message])
-
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
-          {state?.error ? (
+          {actionError ? (
             <p role="alert" className="text-sm text-destructive">
-              {state.error}
+              {actionError}
             </p>
-          ) : state?.message ? (
+          ) : actionResult ? (
             <p role="alert" className="text-sm text-emerald-500">
-              {state.message}
+              {actionResult}
             </p>
           ) : (
             <CardDescription>
@@ -71,7 +74,7 @@ export default function RegisterForm({
           )}
         </CardHeader>
         <CardContent>
-          <form action={action}>
+          <form action={execute}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="name">Name</Label>
@@ -82,10 +85,8 @@ export default function RegisterForm({
                   type="text"
                   name="name"
                 />
-                {state?.errors?.name && (
-                  <p className="text-destructive text-xs">
-                    {state.errors.name[0]}
-                  </p>
+                {nameError && (
+                  <p className="text-destructive text-xs">{nameError[0]}</p>
                 )}
               </div>
               <div className="grid gap-2">
@@ -97,10 +98,8 @@ export default function RegisterForm({
                   value={formState.email}
                   onChange={handleChange}
                 />
-                {state?.errors?.email && (
-                  <p className="text-destructive text-xs">
-                    {state.errors.email[0]}
-                  </p>
+                {emailError && (
+                  <p className="text-destructive text-xs">{emailError[0]}</p>
                 )}
               </div>
               <div className="grid gap-2">
@@ -124,10 +123,8 @@ export default function RegisterForm({
                     {isShowPassword ? <EyeIcon /> : <EyeOff />}
                   </Button>
                 </div>
-                {state?.errors?.password && (
-                  <p className="text-destructive text-xs">
-                    {state.errors.password[0]}
-                  </p>
+                {passwordError && (
+                  <p className="text-destructive text-xs">{passwordError[0]}</p>
                 )}
               </div>
               <MyCheckBox
@@ -135,8 +132,8 @@ export default function RegisterForm({
                 label="Accept terms and conditions"
                 setCheck={setAcceptTerms}
               />
-              <Button disabled={pending} type="submit" className="w-full">
-                {pending && <Loader2 className="animate-spin" />}
+              <Button disabled={isPending} type="submit" className="w-full">
+                {isPending && <Loader2 className="animate-spin" />}
                 Register
               </Button>
               <Button variant="outline" className="w-full">

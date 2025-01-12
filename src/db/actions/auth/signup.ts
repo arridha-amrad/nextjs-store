@@ -1,7 +1,34 @@
 'use server'
 
 import { SignupFormSchema } from '@/lib/definitions/auth'
+import { actionClient } from '@/lib/safeAction'
 import { Supabase } from '@/lib/supabase/Supabase'
+import { z } from 'zod'
+import { zfd } from 'zod-form-data'
+
+const schema = zfd.formData({
+  name: zfd.text(z.string().min(1).max(100).trim()),
+  email: zfd.text(z.string().email().trim()),
+  password: zfd.text(
+    z
+      .string()
+      .min(8, { message: 'Be at least 8 characters long' })
+      .regex(/[a-zA-Z]/, { message: 'Contain at least one letter.' })
+      .regex(/[0-9]/, { message: 'Contain at least one number.' })
+      .regex(/[^a-zA-Z0-9]/, {
+        message: 'Contain at least one special character.',
+      })
+      .trim(),
+  ),
+})
+
+export const registerUser = actionClient
+  .schema(schema)
+  .action(async ({ parsedInput: { email, name, password } }) => {
+    return {
+      message: `An email has been sent to ${email}. Please follow the instructions to complete your registration`,
+    }
+  })
 
 export async function signup(_: unknown, formData: FormData) {
   const email = formData.get('email') as string
