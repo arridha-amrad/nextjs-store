@@ -317,6 +317,17 @@ export type Database = {
       }
     }
     Functions: {
+      add_product: {
+        Args: {
+          new_description: string
+          new_name: string
+          new_price: number
+          new_stock: number
+          new_categories: string[]
+          new_filepaths: string[]
+        }
+        Returns: string
+      }
       create_account_with_role: {
         Args: {
           new_email: string

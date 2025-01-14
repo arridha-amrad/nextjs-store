@@ -11,13 +11,8 @@ import { createProduct } from '@/db/actions/product/create'
 
 import { useToast } from '@/hooks/use-toast'
 import { Loader } from 'lucide-react'
-import {
-  ChangeEventHandler,
-  useActionState,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { useAction } from 'next-safe-action/hooks'
+import { ChangeEventHandler, useEffect, useRef, useState } from 'react'
 
 export default function FormCreateProduct() {
   const [formState, setFormState] = useState({
@@ -36,38 +31,46 @@ export default function FormCreateProduct() {
   }
 
   const [files, setFiles] = useState<File[]>([])
-  const [state, action, pending] = useActionState(createProduct, undefined)
   const { toast } = useToast()
+
+  const { execute, isPending, result } = useAction(createProduct, {
+    onError({ error: { serverError } }) {
+      if (serverError) {
+        toast({
+          description: serverError,
+          variant: 'destructive',
+        })
+      }
+    },
+    onSuccess({ data }) {
+      if (data) {
+        toast({
+          description: 'new product added',
+        })
+        setFormState({
+          ...formState,
+          name: '',
+          description: '',
+          price: 0,
+          stock: 0,
+          photosTotalSize: 0,
+        })
+        setFiles([])
+        categoriesRef.current?.resetCategories()
+      }
+    },
+  })
+
+  const nameError = result.validationErrors?.name?._errors
+  const categoriesError = result.validationErrors?.categories?._errors
+  const stockError = result.validationErrors?.stock?._errors
+  const descriptionError = result.validationErrors?.description?._errors
+  const photosError = result.validationErrors?.photos?._errors
+  const priceError = result.validationErrors?.price?._errors
+
   const inputFileRef = useRef<HTMLInputElement | null>(null)
   const categoriesRef = useRef<SelectCategoriesHandler>(null)
   const { description, name, price, stock, photosTotalSize } = formState
-
-  useEffect(() => {
-    if (state?.message) {
-      toast({
-        description: state.message,
-      })
-      categoriesRef.current?.resetCategories()
-      setFormState({
-        ...formState,
-        description: '',
-        name: '',
-        price: 0,
-        stock: 0,
-      })
-    }
-    // eslint-disable-next-line
-  }, [state?.message, pending])
-
-  useEffect(() => {
-    if (state?.error) {
-      toast({
-        description: state.error,
-        variant: 'destructive',
-      })
-    }
-    // eslint-disable-next-line
-  }, [state?.error, pending])
 
   useEffect(() => {
     if (files.length > 0) {
@@ -84,13 +87,13 @@ export default function FormCreateProduct() {
   }, [files])
 
   return (
-    <fieldset disabled={pending}>
+    <fieldset disabled={isPending}>
       <form
         action={(formdata) => {
           for (const file of files) {
             formdata.append('photos', file)
           }
-          action(formdata)
+          execute(formdata)
         }}
         className="grid grid-cols-2 gap-y-5 gap-x-10"
       >
@@ -103,16 +106,14 @@ export default function FormCreateProduct() {
             value={name}
             onChange={handleChange}
           />
-          {state?.errors?.name && (
-            <p className="text-destructive text-xs">{state?.errors.name[0]}</p>
+          {nameError && (
+            <p className="text-destructive text-xs">{nameError[0]}</p>
           )}
         </div>
         <div className="col-span-2 space-y-3">
           <SelectCategories ref={categoriesRef} />
-          {state?.errors?.categories && (
-            <p className="text-destructive text-xs">
-              {state?.errors.categories[0]}
-            </p>
+          {categoriesError && (
+            <p className="text-destructive text-xs">{categoriesError[0]}</p>
           )}
         </div>
 
@@ -133,8 +134,8 @@ export default function FormCreateProduct() {
               </Button>
             </div>
           </div>
-          {state?.errors?.price && (
-            <p className="text-destructive text-xs">{state?.errors.price[0]}</p>
+          {priceError && (
+            <p className="text-destructive text-xs">{priceError[0]}</p>
           )}
         </div>
 
@@ -148,8 +149,8 @@ export default function FormCreateProduct() {
             value={stock}
             onChange={handleChange}
           />
-          {state?.errors?.stock && (
-            <p className="text-destructive text-xs">{state?.errors.stock[0]}</p>
+          {stockError && (
+            <p className="text-destructive text-xs">{stockError[0]}</p>
           )}
         </div>
 
@@ -167,10 +168,8 @@ export default function FormCreateProduct() {
               })
             }}
           />
-          {state?.errors?.description && (
-            <p className="text-destructive text-xs">
-              {state?.errors.description[0]}
-            </p>
+          {descriptionError && (
+            <p className="text-destructive text-xs">{descriptionError[0]}</p>
           )}
         </div>
 
@@ -188,8 +187,8 @@ export default function FormCreateProduct() {
               multiple
               accept="image/*"
             />
-            {state?.errorPhotos ? (
-              <p className="text-xs text-destructive">{state?.errorPhotos}</p>
+            {photosError ? (
+              <p className="text-xs text-destructive">{photosError}</p>
             ) : formState.photosTotalSize === 0 ? (
               <p className="text-xs text-muted-foreground">
                 Please provide photos less than 1000 Kb
@@ -203,7 +202,7 @@ export default function FormCreateProduct() {
         </div>
 
         <Button type="submit" className="self-end max-w-xs mt-8">
-          {pending && <Loader className="animate-spin" />}
+          {isPending && <Loader className="animate-spin" />}
           Save
         </Button>
       </form>

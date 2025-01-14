@@ -11,8 +11,6 @@ import { createClient } from './supabase/server'
 // base client
 export const actionClient = createSafeActionClient({
   handleServerError: (e) => {
-    console.log('action error : ', e)
-
     if (e instanceof SafeActionError) {
       return e.message
     }

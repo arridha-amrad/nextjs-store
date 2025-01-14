@@ -18,6 +18,18 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import { Database } from '../../../database.types'
 
+/**
+ * TODO:
+ * 1. Get user cart from table 'carts'
+ *    with filter:
+ *      - is_select: true
+ *      - user_id: auth user id
+ * 2. Create new transaction
+ * 3. Create new order items
+ * 4. Count order's amount
+ * 5. Update order value of transactions table
+ */
+
 export const create = async () => {
   const sb = await Supabase.initServerClient()
   const {
@@ -28,9 +40,7 @@ export const create = async () => {
     return redirect('/login')
   }
 
-  // 1. get items from carts
-  // with user_id = curr login user
-  // and is_selected is true
+  // 1
   const { data: carts, error: errCarts } = await sb
     .from('carts')
     .select(

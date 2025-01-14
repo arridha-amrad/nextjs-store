@@ -10,6 +10,7 @@ import { authActionClient } from '@/lib/safeAction'
 import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
+import { Database } from '../../../database.types'
 
 /**
  *  TODO:
@@ -89,29 +90,22 @@ export const destroy = authActionClient
     revalidateTag(CACHE_KEY_CARTS_COUNTER)
   })
 
+type UpdateProps = Database['public']['Tables']['carts']['Update']
 export const updateCart = authActionClient
-  .schema(
-    z.object({
-      cartId: z.number(),
-      isSelect: z.boolean(),
-      total: z.number(),
-    }),
-  )
-  .action(
-    async ({ parsedInput: { cartId, isSelect, total }, ctx: { supabase } }) => {
-      const { error } = await supabase
-        .from('carts')
-        .update({
-          is_select: isSelect,
-          total,
-        })
-        .eq('id', cartId)
+  .schema(z.custom<UpdateProps>())
+  .action(async ({ parsedInput: data, ctx: { supabase } }) => {
+    if (!data.id) {
+      throw new SafeActionError('cart id is required')
+    }
+    const { error } = await supabase
+      .from('carts')
+      .update(data)
+      .eq('id', data.id)
 
-      if (error) {
-        throw new SafeActionError(error.message)
-      }
+    if (error) {
+      throw new SafeActionError(error.message)
+    }
 
-      revalidateTag(CACHE_KEY_CARTS)
-      revalidateTag(CACHE_KEY_CARTS_AMOUNT)
-    },
-  )
+    revalidateTag(CACHE_KEY_CARTS)
+    revalidateTag(CACHE_KEY_CARTS_AMOUNT)
+  })

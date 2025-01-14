@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { useDebounce } from 'use-debounce'
-import { update } from '@/db/actions/carts'
+import { updateCart } from '@/db/actions/carts'
 import { useShopCart } from './Context'
 
 type Props = {
@@ -18,10 +18,9 @@ function CartItemTotalItem({ totalItem, id }: Props) {
   const { setLoading } = useShopCart()
 
   useEffect(() => {
-    update(id, { total: value }).then(() => {
-      setLoading(false)
-    })
-  }, [value, id, setLoading])
+    updateCart({ id, total: value })
+    // eslint-disable-next-line
+  }, [value])
 
   useEffect(() => {
     if (pending) {

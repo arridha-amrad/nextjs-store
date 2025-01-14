@@ -1,56 +1,56 @@
-'use client';
+'use client'
 
-import { createClient } from '@/lib/supabase/client';
-import { Label } from '@radix-ui/react-label';
-import dynamic from 'next/dynamic';
-import { Ref, useImperativeHandle, useState } from 'react';
+import { createClient } from '@/lib/supabase/client'
+import { Label } from '@radix-ui/react-label'
+import dynamic from 'next/dynamic'
+import { Ref, useImperativeHandle, useState } from 'react'
 const CreatableSelect = dynamic(() => import('react-select/async-creatable'), {
   ssr: false,
-});
+})
 
 type Option = {
-  value: string;
-  label: string;
-};
+  value: string
+  label: string
+}
 
 type Props = {
-  defaultValue?: Option[];
-  ref?: Ref<SelectCategoriesHandler>;
-};
+  defaultValue?: Option[]
+  ref?: Ref<SelectCategoriesHandler>
+}
 
 export type SelectCategoriesHandler = {
-  resetCategories: () => void;
-};
+  resetCategories: () => void
+}
 
 export default function SelectCategories({ defaultValue, ref }: Props) {
-  const [isFocusCategory, setFocusCategory] = useState(false);
+  const [isFocusCategory, setFocusCategory] = useState(false)
 
-  const [value, setValue] = useState<Option[]>(defaultValue ?? []);
+  const [value, setValue] = useState<Option[]>(defaultValue ?? [])
 
   useImperativeHandle(
     ref,
     () => {
       return {
         resetCategories() {
-          setValue([]);
+          setValue([])
         },
-      };
+      }
     },
     [],
-  );
+  )
 
   const loadCategories = async (value: string) => {
-    const sb = createClient();
-    const { data } = await sb.from('categories').select('*');
-    if (!data) return [];
+    const sb = createClient()
+    const { data } = await sb.from('categories').select('*')
+    if (!data) return []
     const options = data.map((v) => ({
       label: v.name,
       value: v.name,
-    }));
+    }))
     return options.filter((v) =>
       v.label.toLowerCase().includes(value.toLowerCase()),
-    );
-  };
+    )
+  }
 
   return (
     <div className="space-y-3 relative">
@@ -64,7 +64,7 @@ export default function SelectCategories({ defaultValue, ref }: Props) {
         id="categories"
         name="categories"
         onChange={(v) => {
-          setValue(v as Option[]);
+          setValue(v as Option[])
         }}
         value={value}
         unstyled
@@ -94,5 +94,5 @@ export default function SelectCategories({ defaultValue, ref }: Props) {
         loadOptions={loadCategories}
       />
     </div>
-  );
+  )
 }

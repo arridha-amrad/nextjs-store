@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Checkbox } from '../ui/checkbox'
 import { useDebounce } from 'use-debounce'
-import { update } from '@/db/actions/carts'
+import { updateCart } from '@/db/actions/carts'
 import { useShopCart } from './Context'
 
 type Props = {
@@ -19,10 +19,9 @@ function CartItemCheckbox({ isSelect, id }: Props) {
   const { setLoading } = useShopCart()
 
   useEffect(() => {
-    update(id, { is_select: value }).then(() => {
-      setLoading(false)
-    })
-  }, [value, id, setLoading])
+    updateCart({ id, is_select: value })
+    // eslint-disable-next-line
+  }, [value])
 
   useEffect(() => {
     if (pending) {

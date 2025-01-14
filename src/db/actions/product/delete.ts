@@ -3,6 +3,7 @@
 import {
   CACHE_KEY_PRODUCT_ON_ADMIN,
   CACHE_KEY_PRODUCTS_ON_ADMIN,
+  CACHE_KEY_PRODUCTS_ON_CUSTOMER,
 } from '@/cacheKey'
 import { Supabase } from '@/lib/supabase/Supabase'
 import { revalidateTag } from 'next/cache'
@@ -26,6 +27,7 @@ export const removeProduct = async (id: string) => {
 
     revalidateTag(CACHE_KEY_PRODUCTS_ON_ADMIN)
     revalidateTag(CACHE_KEY_PRODUCT_ON_ADMIN)
+    revalidateTag(CACHE_KEY_PRODUCTS_ON_CUSTOMER)
     return 'Product delete'
   }
 }

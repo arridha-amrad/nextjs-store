@@ -33,7 +33,7 @@ export default function CartItem({
 
   const deleteItem = () => {
     startTransition(async () => {
-      await destroy(id)
+      await destroy({ cartId: id })
     })
   }
 
