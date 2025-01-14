@@ -1,31 +1,22 @@
-"use client";
+'use client'
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { Dispatch, SetStateAction } from "react";
+import { Checkbox } from '@/components/ui/checkbox'
+import { CheckboxProps } from '@radix-ui/react-checkbox'
 
 type Props = {
-  label: string;
-  isChecked: boolean;
-  setCheck: Dispatch<SetStateAction<boolean>>;
-};
+  label: string
+} & CheckboxProps
 
-export default function MyCheckBox({ isChecked, label, setCheck }: Props) {
+export default function MyCheckBox({ label, ...props }: Props) {
   return (
     <div className="flex items-center space-x-2">
-      <Checkbox
-        id="terms"
-        name="terms"
-        checked={isChecked}
-        onCheckedChange={(e: boolean) => {
-          setCheck(e);
-        }}
-      />
+      <Checkbox {...props} />
       <label
-        htmlFor="terms"
+        htmlFor={props.id}
         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
       >
         {label}
       </label>
     </div>
-  );
+  )
 }

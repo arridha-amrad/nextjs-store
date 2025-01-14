@@ -1,5 +1,6 @@
 'use client'
 
+import GoogleLogin from '@/components/GoogleLogin'
 import MyCheckBox from '@/components/MyCheckbox'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,7 +12,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { registerUser } from '@/db/actions/auth/signup'
+import { signUp } from '@/db/actions/auth/signUp'
 import { cn } from '@/lib/utils'
 import { EyeIcon, EyeOff, Loader2 } from 'lucide-react'
 import { useAction } from 'next-safe-action/hooks'
@@ -28,7 +29,7 @@ export default function RegisterForm({
     password: '',
   })
 
-  const { execute, isPending, result } = useAction(registerUser, {
+  const { execute, isPending, result } = useAction(signUp, {
     onSuccess() {
       setFormState({
         email: '',
@@ -41,6 +42,7 @@ export default function RegisterForm({
   const emailError = result.validationErrors?.email?._errors
   const nameError = result.validationErrors?.name?._errors
   const passwordError = result.validationErrors?.password?._errors
+  const termsError = result.validationErrors?.terms?._errors
   const actionError = result.serverError
   const actionResult = result.data?.message
 
@@ -110,7 +112,8 @@ export default function RegisterForm({
                     type={isShowPassword ? 'text' : 'password'}
                     name="password"
                     onChange={handleChange}
-                    value={formState.password}
+                    // value={formState.password}
+                    value="freePalestine99!"
                     className="pr-12"
                   />
                   <Button
@@ -128,17 +131,20 @@ export default function RegisterForm({
                 )}
               </div>
               <MyCheckBox
-                isChecked={isAcceptTerms}
+                id="terms"
+                name="terms"
+                checked={isAcceptTerms}
                 label="Accept terms and conditions"
-                setCheck={setAcceptTerms}
+                onCheckedChange={(e: boolean) => setAcceptTerms(e)}
               />
+              {termsError && (
+                <p className="text-destructive text-xs">{termsError[0]}</p>
+              )}
               <Button disabled={isPending} type="submit" className="w-full">
                 {isPending && <Loader2 className="animate-spin" />}
                 Register
               </Button>
-              <Button variant="outline" className="w-full">
-                Continue with Google
-              </Button>
+              <GoogleLogin />
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{' '}

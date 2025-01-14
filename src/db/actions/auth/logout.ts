@@ -1,11 +1,9 @@
 'use server'
 
-import { Supabase } from '@/lib/supabase/Supabase'
-import { redirect } from 'next/navigation'
+import { authActionClient } from '@/lib/safeAction'
+import { redirect, RedirectType } from 'next/navigation'
 
-export const logout = async () => {
-  const supabase = await Supabase.initServerClient()
+export const logout = authActionClient.action(async ({ ctx: { supabase } }) => {
   await supabase.auth.signOut({ scope: 'local' })
-
-  redirect('/login')
-}
+  redirect('/login', RedirectType.replace)
+})

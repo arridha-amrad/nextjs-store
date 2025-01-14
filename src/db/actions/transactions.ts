@@ -9,10 +9,14 @@ import {
   CACHE_KEY_TRANSACTIONS_ADMIN,
 } from '@/cacheKey'
 import { TransactionStatus } from '@/lib/definitions/transaction'
+import { SafeActionError } from '@/lib/errors/SafeActionError'
+import { authActionClient } from '@/lib/safeAction'
 import { Supabase } from '@/lib/supabase/Supabase'
 import { generateInvoice } from '@/lib/utils'
 import { revalidateTag } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { z } from 'zod'
+import { Database } from '../../../database.types'
 
 export const create = async () => {
   const sb = await Supabase.initServerClient()
@@ -100,17 +104,29 @@ export const create = async () => {
   return 'Your request order has been placed successfully'
 }
 
-export const updateTransactionStatus = async (
-  invoice: string,
-  status: TransactionStatus,
-) => {
-  const supabase = await Supabase.initServerClient()
-  await supabase
-    .from('transactions')
-    .update({
-      status,
-    })
-    .eq('invoice', invoice)
+type UpdateProps = Database['public']['Tables']['transactions']['Update']
+export const updateTransaction = authActionClient
+  .schema(
+    z.object({
+      data: z.custom<UpdateProps>(),
+    }),
+  )
+  .action(async ({ parsedInput: { data }, ctx: { supabase } }) => {
+    const invoice = data.invoice
+    if (!invoice) {
+      throw new SafeActionError(
+        'Please include transaction invoice to perform update',
+      )
+    }
 
-  revalidateTag(CACHE_KEY_TRANSACTIONS_ADMIN)
-}
+    const { error } = await supabase
+      .from('transactions')
+      .update(data)
+      .eq('invoice', invoice)
+
+    if (error) {
+      throw new SafeActionError(error.message)
+    }
+
+    revalidateTag(CACHE_KEY_TRANSACTIONS_ADMIN)
+  })

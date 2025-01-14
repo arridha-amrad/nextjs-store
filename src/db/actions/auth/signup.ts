@@ -1,8 +1,7 @@
 'use server'
 
-import { SignupFormSchema } from '@/lib/definitions/auth'
+import { SafeActionError } from '@/lib/errors/SafeActionError'
 import { actionClient } from '@/lib/safeAction'
-import { Supabase } from '@/lib/supabase/Supabase'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 
@@ -20,90 +19,59 @@ const schema = zfd.formData({
       })
       .trim(),
   ),
+  terms: zfd
+    .checkbox()
+    .refine((val) => val, 'Please check our terms and conditions'),
 })
 
-export const registerUser = actionClient
+export const signUp = actionClient
   .schema(schema)
-  .action(async ({ parsedInput: { email, name, password } }) => {
-    return {
-      message: `An email has been sent to ${email}. Please follow the instructions to complete your registration`,
-    }
-  })
+  .action(
+    async ({ parsedInput: { email, name, password }, ctx: { supabase } }) => {
+      const { data, error } = await supabase
+        .from('accounts')
+        .select('*')
+        .eq('email', email)
 
-export async function signup(_: unknown, formData: FormData) {
-  const email = formData.get('email') as string
-  const password = formData.get('password') as string
-  const name = formData.get('name') as string
-  const terms = formData.get('terms')
+      if (error) {
+        throw new SafeActionError(error.message)
+      }
 
-  const validatedFields = SignupFormSchema.safeParse({
-    name,
-    email,
-    password,
-  })
+      if (data.length > 0) {
+        throw new SafeActionError('Email has been registered')
+      }
 
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
-  }
-
-  if (terms !== 'on') {
-    return {
-      error: 'You need to accept our terms and condition',
-    }
-  }
-
-  const supabase = await Supabase.initServerClient()
-
-  const { data: d } = await supabase
-    .from('accounts')
-    .select('id')
-    .eq('email', email)
-
-  if (d && d.length > 0) {
-    return {
-      error: `${email} has been registered`,
-    }
-  }
-
-  const {
-    error,
-    data: { user },
-  } = await supabase.auth.signUp({
-    email,
-    password,
-  })
-
-  if (error) {
-    return {
-      error: error.message,
-    }
-  }
-
-  if (user) {
-    const { data: newAccount, error: errNewAcount } = await supabase
-      .from('accounts')
-      .insert({
+      const {
+        error: errSignup,
+        data: { user },
+      } = await supabase.auth.signUp({
         email,
-        name,
-        user_id: user?.id,
+        password,
       })
-      .select()
-      .single()
 
-    if (errNewAcount) {
-      console.log({ errNewAcount })
-    }
+      if (errSignup) {
+        throw new SafeActionError(errSignup.message)
+      }
 
-    if (newAccount) {
-      await supabase
-        .from('account_roles')
-        .insert({ role_id: 2, account_id: newAccount.id })
-    }
-  }
+      if (!user) {
+        throw new SafeActionError('no user after signup')
+      }
 
-  return {
-    message: `An email has been sent to ${email}. Please follow the instructions to complete your registration`,
-  }
-}
+      const { error: errNewAccount } = await supabase.rpc(
+        'create_account_with_role',
+        {
+          new_email: email,
+          new_name: name,
+          new_user_id: user.id,
+        },
+      )
+
+      if (errNewAccount) {
+        throw new SafeActionError(errNewAccount.message)
+      }
+
+      return {
+        message: `An email has been sent to ${email}. Please follow the instructions to complete your registration`,
+      }
+    },
+  )

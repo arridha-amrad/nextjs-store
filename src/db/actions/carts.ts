@@ -2,85 +2,116 @@
 
 import {
   CACHE_KEY_CARTS,
-  CACHE_KEY_CARTS_COUNTER,
   CACHE_KEY_CARTS_AMOUNT,
+  CACHE_KEY_CARTS_COUNTER,
 } from '@/cacheKey'
-import { Supabase } from '@/lib/supabase/Supabase'
+import { SafeActionError } from '@/lib/errors/SafeActionError'
+import { authActionClient } from '@/lib/safeAction'
 import { revalidateTag } from 'next/cache'
-import { redirect } from 'next/navigation'
-import { Database } from '../../../database.types'
+import { z } from 'zod'
+import { zfd } from 'zod-form-data'
 
-export const create = async (productId: string) => {
-  const sb = await Supabase.initServerClient()
-  const {
-    data: { user },
-  } = await sb.auth.getUser()
+/**
+ *  TODO:
+ *  if user doesn't have curr product in his cart, then create a new cart
+ *  else update his cart, total += 1
+ */
 
-  if (!user) {
-    redirect('/login')
-  }
-
-  // if user doesn't have curr product in his cart -> create new one
-  // else update his cart -> total + 1
-  const { data: carts } = await sb
-    .from('carts')
-    .select('total')
-    .eq('user_id', user.id)
-    .eq('product_id', productId)
-    .single()
-
-  let message = ''
-  if (carts) {
-    const { error } = await sb
+export const addToCart = authActionClient
+  .schema(
+    z.object({
+      productId: zfd.text(z.string()),
+    }),
+  )
+  .action(async ({ ctx: { supabase, user }, parsedInput: { productId } }) => {
+    const { data, error } = await supabase
       .from('carts')
-      .update({
-        total: carts.total + 1,
-      })
+      .select('total')
       .eq('user_id', user.id)
       .eq('product_id', productId)
+
     if (error) {
-      console.log(error)
-      return error.message
+      throw new SafeActionError(error.message)
     }
-    message = 'New items added to your cart'
-  } else {
-    const { error } = await sb.from('carts').insert({
-      product_id: productId,
-      total: 1,
-      user_id: user.id,
-    })
+
+    let message = ''
+
+    if (data.length === 0) {
+      const { error } = await supabase.from('carts').insert({
+        product_id: productId,
+        total: 1,
+        user_id: user.id,
+      })
+
+      if (error) {
+        throw new SafeActionError(error.message)
+      }
+
+      message = 'Your carts has been updated'
+    } else {
+      const { error } = await supabase
+        .from('carts')
+        .update({
+          total: data[0].total + 1,
+        })
+        .eq('user_id', user.id)
+        .eq('product_id', productId)
+
+      if (error) {
+        throw new SafeActionError(error.message)
+      }
+
+      message = 'New items added to your cart'
+    }
+
+    revalidateTag(CACHE_KEY_CARTS)
+    revalidateTag(CACHE_KEY_CARTS_AMOUNT)
+    revalidateTag(CACHE_KEY_CARTS_COUNTER)
+
+    return message
+  })
+
+export const destroy = authActionClient
+  .schema(
+    z.object({
+      cartId: z.number(),
+    }),
+  )
+  .action(async ({ ctx: { supabase }, parsedInput: { cartId } }) => {
+    const { error } = await supabase.from('carts').delete().eq('id', cartId)
+
     if (error) {
-      console.log(error)
-      return error.message
+      throw new SafeActionError(error.message)
     }
-    message = 'Your carts has been updated'
-  }
 
-  revalidateTag(CACHE_KEY_CARTS)
-  revalidateTag(CACHE_KEY_CARTS_AMOUNT)
-  revalidateTag(CACHE_KEY_CARTS_COUNTER)
+    revalidateTag(CACHE_KEY_CARTS)
+    revalidateTag(CACHE_KEY_CARTS_AMOUNT)
+    revalidateTag(CACHE_KEY_CARTS_COUNTER)
+  })
 
-  return message
-}
+export const updateCart = authActionClient
+  .schema(
+    z.object({
+      cartId: z.number(),
+      isSelect: z.boolean(),
+      total: z.number(),
+    }),
+  )
+  .action(
+    async ({ parsedInput: { cartId, isSelect, total }, ctx: { supabase } }) => {
+      const { error } = await supabase
+        .from('carts')
+        .update({
+          is_select: isSelect,
+          total,
+        })
+        .eq('id', cartId)
 
-export const destroy = async (cartId: number) => {
-  const sb = await Supabase.initServerClient()
-  const { error } = await sb.from('carts').delete().eq('id', cartId)
-  if (error) {
-    console.log(error)
-  }
-  revalidateTag(CACHE_KEY_CARTS)
-  revalidateTag(CACHE_KEY_CARTS_AMOUNT)
-  revalidateTag(CACHE_KEY_CARTS_COUNTER)
-}
+      if (error) {
+        throw new SafeActionError(error.message)
+      }
 
-type UpdateProps = Database['public']['Tables']['carts']['Update']
-export const update = async (cartId: number, data: UpdateProps) => {
-  const sb = await Supabase.initServerClient()
-  const { error } = await sb.from('carts').update(data).eq('id', cartId)
-  if (error) {
-    console.log(error)
-  }
-  revalidateTag(CACHE_KEY_CARTS)
-  revalidateTag(CACHE_KEY_CARTS_AMOUNT)
-}
+      revalidateTag(CACHE_KEY_CARTS)
+      revalidateTag(CACHE_KEY_CARTS_AMOUNT)
+    },
+  )

@@ -6,6 +6,7 @@ import { cookies } from 'next/headers'
 import { getAuthUserAndClient } from './utils'
 import { redirect } from 'next/navigation'
 import { SafeActionError } from './errors/SafeActionError'
+import { createClient } from './supabase/server'
 
 // base client
 export const actionClient = createSafeActionClient({
@@ -17,6 +18,10 @@ export const actionClient = createSafeActionClient({
     }
     return DEFAULT_SERVER_ERROR_MESSAGE
   },
+}).use(async ({ next }) => {
+  const cookie = await cookies()
+  const supabase = createClient(cookie)
+  return next({ ctx: { supabase } })
 })
 
 // client required auth

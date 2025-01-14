@@ -9,7 +9,7 @@ import Image from 'next/image'
 import { useTransition } from 'react'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
-import { create } from '@/db/actions/carts'
+import { addToCart as atc } from '@/db/actions/carts'
 
 type Props = {
   product: ProductsOnSales
@@ -21,7 +21,7 @@ function ProductItem({ product }: Props) {
 
   const addToCart = () => {
     startTransition(async () => {
-      const result = await create(product.id)
+      const result = await atc({ productId: product.id })
       if (result) {
         toast({
           description: `${product.name} added to cart`,

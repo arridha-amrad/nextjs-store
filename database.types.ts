@@ -317,7 +317,14 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      create_account_with_role: {
+        Args: {
+          new_email: string
+          new_name: string
+          new_user_id: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       order_status: "on progress" | "confirmed" | "shipping" | "arrived"
