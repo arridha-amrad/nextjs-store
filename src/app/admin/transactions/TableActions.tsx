@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { updateTransactionStatus } from '@/db/actions/transactions'
+import { updateTransaction } from '@/db/actions/transactions'
 import { TransactionStatus } from '@/lib/definitions/transaction'
 import { MoreVertical, Check, Ship } from 'lucide-react'
 
@@ -38,14 +38,18 @@ function TableActions({ status, invoice }: Props) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => updateTransactionStatus(invoice, 'confirmed')}
+          onClick={() =>
+            updateTransaction({ data: { invoice, status: 'confirmed' } })
+          }
           disabled={index > 0}
         >
           <Check />
           Confirm
         </DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => updateTransactionStatus(invoice, 'shipping')}
+          onClick={() =>
+            updateTransaction({ data: { invoice, status: 'shipping' } })
+          }
           disabled={index === 0 || index > 1}
         >
           <Ship />

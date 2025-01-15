@@ -90,7 +90,7 @@ export default function DropDownUser({ user }: Props) {
           <span>Transactions</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={() => logout()}>
           <LogOut />
           <span>Log out</span>
         </DropdownMenuItem>

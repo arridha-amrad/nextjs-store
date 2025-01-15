@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { signUp } from '@/db/actions/auth/signUp'
+import { signUp } from '@/db/actions/auth/signup'
 import { cn } from '@/lib/utils'
 import { EyeIcon, EyeOff, Loader2 } from 'lucide-react'
 import { useAction } from 'next-safe-action/hooks'
