@@ -25,7 +25,7 @@ export default function Cart({ data, children }: Props) {
   const router = useRouter()
 
   useEffect(() => {
-    if (pathname === '/checkout' && !open) {
+    if (pathname === '/carts' && !open) {
       router.back()
     }
     // eslint-disable-next-line

@@ -19,7 +19,9 @@ function CartItemCheckbox({ isSelect, id }: Props) {
   const { setLoading } = useShopCart()
 
   useEffect(() => {
-    updateCart({ id, is_select: value })
+    updateCart({ id, is_select: value }).finally(() => {
+      setLoading(false)
+    })
     // eslint-disable-next-line
   }, [value])
 

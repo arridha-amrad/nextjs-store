@@ -336,6 +336,25 @@ export type Database = {
         }
         Returns: string
       }
+      create_transaction: {
+        Args: {
+          new_invoice: string
+          auth_user_id: string
+        }
+        Returns: string
+      }
+      update_product: {
+        Args: {
+          u_product_id: string
+          product_description: string
+          product_name: string
+          product_stock: number
+          product_price: number
+          u_categories: string[]
+          product_file_paths: string[]
+        }
+        Returns: string
+      }
     }
     Enums: {
       order_status: "on progress" | "confirmed" | "shipping" | "arrived"

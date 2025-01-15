@@ -18,7 +18,9 @@ function CartItemTotalItem({ totalItem, id }: Props) {
   const { setLoading } = useShopCart()
 
   useEffect(() => {
-    updateCart({ id, total: value })
+    updateCart({ id, total: value }).finally(() => {
+      setLoading(false)
+    })
     // eslint-disable-next-line
   }, [value])
 

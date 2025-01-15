@@ -9,12 +9,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { supabaseStorageBaseUrl } from '@/config'
-import { editProductAction } from '@/db/actions/product/edit'
+import { updateProduct } from '@/db/actions/product/update'
 import { useToast } from '@/hooks/use-toast'
 import { TEditProduct } from '@/lib/definitions/product'
 import { DollarSignIcon, Loader, PlusIcon } from 'lucide-react'
+import { useAction } from 'next-safe-action/hooks'
 import Image from 'next/image'
-import { useActionState, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Props = {
   props: TEditProduct
@@ -22,8 +23,39 @@ type Props = {
 
 export default function FormEditProduct({ props }: Props) {
   const { categories, description, name, photos, price, stock, id } = props
-  const [newStockValue, setNewStockValue] = useState(stock)
   const { toast } = useToast()
+
+  const { execute, isPending, result } = useAction(
+    updateProduct.bind(null, id),
+    {
+      onError({ error: { serverError } }) {
+        if (serverError) {
+          toast({
+            description: serverError,
+            variant: 'destructive',
+          })
+        }
+      },
+      onSuccess({ data }) {
+        if (data) {
+          toast({
+            description: data,
+          })
+          setPreviews([])
+          setFilesToUpload([])
+        }
+      },
+    },
+  )
+
+  const nameError = result.validationErrors?.name?._errors
+  const categoriesError = result.validationErrors?.categories?._errors
+  const descriptionError = result.validationErrors?.description?._errors
+  const photosError = result.validationErrors?.photos?._errors
+  const stockError = result.validationErrors?.stock?._errors
+  const priceError = result.validationErrors?.price?._errors
+
+  const [newStockValue, setNewStockValue] = useState(stock)
 
   const hiddenInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -31,41 +63,14 @@ export default function FormEditProduct({ props }: Props) {
   const [previews, setPreviews] = useState<string[]>([])
   const [filesToUpload, setFilesToUpload] = useState<File[]>([])
 
-  const [state, action, isPending] = useActionState(
-    editProductAction,
-    undefined,
-  )
-
   useEffect(() => {
     if (file) {
       const url = URL.createObjectURL(file)
-      console.log(url)
       setPreviews([...previews, url])
       setFilesToUpload([...filesToUpload, file])
     }
     // eslint-disable-next-line
   }, [file])
-
-  useEffect(() => {
-    if (state?.message) {
-      toast({
-        description: state.message,
-      })
-      setPreviews([])
-      setFilesToUpload([])
-    }
-    // eslint-disable-next-line
-  }, [state?.message])
-
-  useEffect(() => {
-    if (state?.error) {
-      toast({
-        description: state.error,
-        variant: 'destructive',
-      })
-    }
-    // eslint-disable-next-line
-  }, [state?.error])
 
   const removeFromPreview = (i: number) => {
     const filteredPreviews = previews.filter((_, j) => j !== i)
@@ -81,26 +86,23 @@ export default function FormEditProduct({ props }: Props) {
           for (const file of filesToUpload) {
             data.append('photos', file)
           }
-          action(data)
+          execute(data)
         }}
         className="grid grid-cols-2 gap-y-5 gap-x-10"
       >
-        <input type="text" hidden name="productId" defaultValue={id} />
         <div className="space-y-3 col-span-2">
           <Label htmlFor="productName">Product&apos;s Name</Label>
           <Input id="productName" type="text" name="name" defaultValue={name} />
-          {state?.errors?.name && (
-            <p className="text-destructive text-xs">{state?.errors?.name[0]}</p>
+          {nameError && (
+            <p className="text-destructive text-xs">{nameError[0]}</p>
           )}
         </div>
         <div className="space-y-3 col-span-2">
           <SelectCategories
             defaultValue={categories.map((v) => ({ label: v, value: v }))}
           />
-          {state?.errors?.categories && (
-            <p className="text-destructive text-xs">
-              {state?.errors.categories[0]}
-            </p>
+          {categoriesError && (
+            <p className="text-destructive text-xs">{categoriesError[0]}</p>
           )}
         </div>
 
@@ -122,8 +124,8 @@ export default function FormEditProduct({ props }: Props) {
           >
             <DollarSignIcon />
           </Button>
-          {state?.errors?.price && (
-            <p className="text-destructive text-xs">{state?.errors.price[0]}</p>
+          {priceError && (
+            <p className="text-destructive text-xs">{priceError[0]}</p>
           )}
         </div>
         <div className="space-y-3">
@@ -140,8 +142,8 @@ export default function FormEditProduct({ props }: Props) {
             />
             <AddStock setValue={setNewStockValue} />
           </div>
-          {state?.errors?.stock && (
-            <p className="text-destructive text-xs">{state?.errors.stock[0]}</p>
+          {stockError && (
+            <p className="text-destructive text-xs">{stockError[0]}</p>
           )}
         </div>
         <div className="space-y-3 col-span-2">
@@ -152,10 +154,8 @@ export default function FormEditProduct({ props }: Props) {
             name="description"
             defaultValue={description}
           />
-          {state?.errors?.description && (
-            <p className="text-destructive text-xs">
-              {state?.errors.description[0]}
-            </p>
+          {descriptionError && (
+            <p className="text-destructive text-xs">{descriptionError[0]}</p>
           )}
         </div>
 
@@ -229,7 +229,11 @@ export default function FormEditProduct({ props }: Props) {
               </div>
             </MyTooltip>
           )}
+          {photosError && (
+            <p className="text-destructive text-xs">{photosError[0]}</p>
+          )}
         </div>
+
         <div className="col-span-full">
           <p className="text-muted-foreground text-sm">
             *Please upload photos less than 1000 Kb

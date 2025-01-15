@@ -3,13 +3,106 @@
 import {
   CACHE_KEY_PRODUCT_ON_ADMIN,
   CACHE_KEY_PRODUCTS_ON_ADMIN,
+  CACHE_KEY_PRODUCTS_ON_CUSTOMER,
 } from '@/cacheKey'
 import { createProductSchema } from '@/lib/definitions/product'
+import { SafeActionError } from '@/lib/errors/SafeActionError'
+import { authActionClient } from '@/lib/safeAction'
 import { Supabase } from '@/lib/supabase/Supabase'
 import { revalidateTag } from 'next/cache'
 import { v4 } from 'uuid'
+import { z } from 'zod'
+import { zfd } from 'zod-form-data'
 
-export const editProductAction = async (_: unknown, formdata: FormData) => {
+const schema = zfd.formData({
+  categories: zfd
+    .text()
+    .or(zfd.text().array())
+    .transform((v) => {
+      if (typeof v === 'string') {
+        return [v]
+      }
+      return v
+    }),
+  description: zfd.text(z.string().min(1)),
+  name: zfd.text(z.string().min(1)),
+  price: zfd.numeric(z.number().gt(1)),
+  stock: zfd.numeric(z.number().gt(1)),
+  photos: zfd
+    .file()
+    .or(zfd.file().array())
+    .optional()
+    .transform(async (val) => {
+      if (val instanceof File) {
+        return [val]
+      }
+      if (typeof val === 'undefined') {
+        return []
+      }
+      return val
+    })
+    .refine(
+      async (files) => {
+        const total = files.reduce((pv, cv) => pv + cv.size, 0)
+        return total < 1000000
+      },
+      { message: 'File must be <= 1 MB' },
+    ),
+})
+
+export const updateProduct = authActionClient
+  .schema(schema)
+  .bindArgsSchemas<[productId: z.ZodString]>([z.string().uuid()])
+  .action(
+    async ({
+      bindArgsParsedInputs: [productId],
+      parsedInput: { categories, description, name, photos, price, stock },
+      ctx: { supabase },
+    }) => {
+      const paths: string[] = []
+      for (const photo of photos) {
+        const filename = v4()
+        const ext = photo.type.split('/')[1]
+        const { data, error } = await supabase.storage
+          .from('products')
+          .upload(`${productId}/${filename}.${ext}`, photo)
+
+        if (error) {
+          console.log(error)
+          throw new SafeActionError(error.message)
+        }
+        if (data) {
+          paths.push(data.path)
+        }
+      }
+      const { data: updateResult, error: errUpdate } = await supabase.rpc(
+        'update_product',
+        {
+          u_product_id: productId,
+          u_categories: categories,
+          product_description: description,
+          product_file_paths: paths,
+          product_name: name,
+          product_price: price,
+          product_stock: stock,
+        },
+      )
+
+      if (errUpdate) {
+        console.log(errUpdate)
+        throw new SafeActionError(errUpdate.message)
+      }
+
+      revalidateTag(CACHE_KEY_PRODUCT_ON_ADMIN)
+      revalidateTag(CACHE_KEY_PRODUCTS_ON_ADMIN)
+      revalidateTag(CACHE_KEY_PRODUCTS_ON_CUSTOMER)
+
+      return updateResult
+    },
+  )
+
+// Left for learning purpose. but it 100% works as above
+export const editProductAction__ = async (_: unknown, formdata: FormData) => {
   const productId = formdata.get('productId') as string
   const categories = formdata.getAll('categories') as string[]
   const description = formdata.get('description') as string

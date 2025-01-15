@@ -1,6 +1,6 @@
 'use client'
 
-import { create } from '@/db/actions/transactions'
+import { createTransaction } from '@/db/actions/transactions'
 import { useToast } from '@/hooks/use-toast'
 import { Loader } from 'lucide-react'
 import { useTransition } from 'react'
@@ -19,10 +19,18 @@ function CartPayButton({ totalPrice }: Props) {
 
   const placeOrder = () => {
     startTransition(async () => {
-      const result = await create()
-      toast({
-        description: result,
-      })
+      const result = await createTransaction({})
+      if (result?.data) {
+        toast({
+          description: result.data,
+        })
+      }
+      if (result?.serverError) {
+        toast({
+          description: result.serverError,
+          variant: 'destructive',
+        })
+      }
     })
   }
 
